@@ -55,7 +55,7 @@ bool isDigit(char digit)
 //Returns true if nums[] is a valid configuration for a plugboard.
 //That is, if each integer in nums is between 0 and 25, and each 
 //integer occurs exactly once.
-bool validConfig(int nums[26])
+int validConfig(int nums[26])
 {
   int occurences[26];
 
@@ -72,11 +72,11 @@ bool validConfig(int nums[26])
 
   for(int k = 0; k < 26; k++)
     {
-      if(occurences[k] != 1)
-	return false;
+      if(occurences[k] - 1 != 0)
+	return nums[k];
     }
 
-  return true;
+  return 0;
 }
 
 //====================================================================

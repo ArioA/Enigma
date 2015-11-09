@@ -14,9 +14,11 @@
 
 using namespace std;
 
+//Constructor:
+
 Plugboard::Plugboard(char* filename)
   {
-    for(int k = 0; k < 25; k++)
+    for(int k = 0; k < 26; k++)
       {
 	config[k] = k; //Default set-up.
       }
@@ -51,12 +53,14 @@ Plugboard::Plugboard(char* filename)
 	while(digit != ' ' && digit != '\n')
 	  {
 
-	    if(!isDigit(digit))
+	    if(!isDigit(digit)) //Non-digit characters are not permited.
 	      {
 		cerr << filename << " contains a non-numeric character.\n";
 		exit(4);
 	      }
-	    
+
+	    //Works out what number is - based on number of loop cycles.
+
 	    number *= pow(10,decimal);
 	    number += digit_to_int(digit);
 
@@ -65,43 +69,53 @@ Plugboard::Plugboard(char* filename)
 	    decimal++;
 	    
 	  }
+
+	while(inflow.peek() == ' ') //Skips to next place if next one is 
+	  {                         //a blank space.
+	    inflow.get(digit);
+	  }
 	
-	if(number < 0 || number > 25)
+	if(number < 0 || number > 25) //Checks valid input number in .pb file.
 	  {
 	    cerr << number << " is an invalid index in file " 
 		 << filename << endl;
 	    exit(3);
 	  }
 
-	if(count % 2 == 0)
+	if(count % 2 == 0) //Puts read number into a buffer.
 	  {
 	    index = number;
 	  }
 	else
 	  {
-	    config[index] = number;
+	    config[index] = number; //Implements plugboard 'switch'.
 	    config[number] = index;
 	  }
 	
 	count++;
       }
 
-    if(count % 2 == 1)
+    if(count % 2 == 1) //Can't have odd number of integers in .pb file.
       {
 	cerr << "Incorrect number of parameters in plugboard file:  " 
 	     << filename << endl;
 	exit(6);
       }
+   
 
     if(validConfig(config))
       {
 	cerr << "Impossible plugboard configuration:" << endl
-	     << "at least one character has two plugs in it or"
-	     << "does not feature on this board." << endl;
+	     << "Too many/few " << validConfig(config)
+	     << "s on this board." << endl;
 	exit(5);
       }
   }
 
+
+//Precondition: n is an integer between 0 and 25.
+//Simulates the (n+1)th letter passing through the plugboard.
+//Changes n's value according to plugboard configuration. 
 void Plugboard::passThrough(int& n)
   {
     if(n < 0 || n > 25)

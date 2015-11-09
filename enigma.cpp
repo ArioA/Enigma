@@ -16,6 +16,23 @@ int main(int argc, char** argv)
 
       Plugboard pb(argv[1]);
 
+      for(int k = 0; k < 26; k++)
+	{
+	  cout << int_to_letter(k);
+	}
+
+      cout << endl;
+
+      for(int k = 0; k < 26; k++)
+	{
+	  int buff = k;
+
+	  pb.passThrough(buff);
+
+	  cout << int_to_letter(buff);
+	}
+
+      /*
       cout << "What letter would you like to pass through the plugboard?"
 	   << endl;
 
@@ -34,8 +51,11 @@ int main(int argc, char** argv)
 
       cout << letter << endl;
 
+      */
+
       cout << endl << "Start again? (y/n)" << endl;
       cin >> repeat;
+
     }
   while(repeat == 'y' || repeat == 'Y');
 
