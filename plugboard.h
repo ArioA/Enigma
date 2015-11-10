@@ -4,10 +4,10 @@
 
 class Plugboard
 {
-private:
+ private:
   int config[26]; //Represents where k plug maps to config[k] plug.
   
-public:
+ public:
   Plugboard(char* filename);
   void passThrough(int& n);
 };

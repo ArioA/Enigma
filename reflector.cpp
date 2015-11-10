@@ -1,32 +1,28 @@
-/*Plugboard part of enigma machine. Can insert plugs into pairs of sockets to swap values
-of input/output.*/
-
 //Ario Aliabadi
 //asa215@ic.ac.uk
-//09/11/2015
+//10/11/2015
 
+/*TO DO:
+- .rf file should contain 26 numbers -> if(count != 26)...
+- INVALID_INDEX
+- NON-NUMERIC_CHAR
+*/
+
+#include<cmath>
+#include<fstream>
 #include<cstdlib>
 #include<iostream>
-#include<fstream>
-#include<cmath>
-#include"plugboard.h"
-#include"helper.h"
+#include"reflector.h"
 #include"errors.h"
+#include"helper.h"
 
 using namespace std;
 
-//Constructor:
-
-Plugboard::Plugboard(char* filename)
+Reflector::Reflector(char* filename)
 {
-  cout << "Constructing plugboard from file " << filename << "..." << endl;
+  cout << "Constructing Reflector from " << filename << "..." << endl;
   
-  for(int k = 0; k < 26; k++)
-    {
-      config[k] = k; //Default set-up.
-    }
-  
-  char digit; //character input from .pb file. 
+  char digit; //character input from .rf file. 
   int index(0), count(0);
   
   /*
@@ -53,10 +49,10 @@ Plugboard::Plugboard(char* filename)
 	- decimal counts what power of 10 the input char is.
 	- number is the int equivalent of input characters.
       */
-
+      
       if(!isDigit(digit))  //Next character must be a digit, 
 	{                          //otherwise incorrectly configured file.
-	  cerr << "Impossible plugboard configuration in " << filename
+	  cerr << "Impossible reflector configuration in " << filename
 	       << " - file is not well-formed." << endl;
 	  exit(5);
 	}
@@ -97,36 +93,33 @@ Plugboard::Plugboard(char* filename)
 	  config[index] = number; //Implements plugboard 'switch'.
 	  config[number] = index;
 	}
-
-      inflow.get(digit);
       
+      inflow.get(digit);
+
       count++;
     }
   
-  if(count % 2 == 1) //Can't have odd number of integers in .pb file.
+  if(count != 26) //Must have 26 numbers in .rf file.
     {
-      cerr << "Incorrect number of parameters in plugboard file:  " 
+      cerr << "Incorrect number of parameters in reflector file:  " 
 	   << filename << endl;
-      exit(6);
+      exit(10);
     }
   
   
   if(validConfig(config))
     {
-      cerr << "Impossible plugboard configuration:" << endl
+      cerr << "Impossible reflector configuration:" << endl
 	   << "Too many/few " << validConfig(config)
-	   << "s on this board." << endl;
-      exit(5);
+	   << "s in this file." << endl;
+      exit(9);
     }
-  
-  cout << "Construction of plugboard complete." << endl << endl;
+
+  cout << "Reflector successfully constructed." << endl << endl;
 }
 
 
-//Precondition: n is an integer between 0 and 25.
-//Simulates the (n+1)th letter passing through the plugboard.
-//Changes n's value according to plugboard configuration. 
-void Plugboard::passThrough(int& n)
+void Reflector::passThrough(int& n)
 {
   if(n < 0 || n > 25)
     {

@@ -11,7 +11,7 @@
 
 
 
-OBJ = enigma.o plugboard.o helper.o
+OBJ = enigma.o reflector.o plugboard.o helper.o
 SOR = $(OBJ:.o = .cpp)
 HDR = $(OBJ:.o = .h)
 EXE = enigma
