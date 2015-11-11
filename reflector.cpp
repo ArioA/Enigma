@@ -22,14 +22,6 @@ Reflector::Reflector(char* filename)
 {
   cout << "Constructing Reflector from " << filename << "..." << endl;
   
-  char digit; //character input from .rf file. 
-  int index(0), count(0);
-  
-  /*
-    - index is the buffer in between swapping values.
-    - count counts the number of int inputs.
-  */
-  
   ifstream inflow;
   inflow.open(filename);
 
@@ -38,6 +30,18 @@ Reflector::Reflector(char* filename)
       cerr << "Error: Unable to open file: " << filename << ".\n";
       exit(11);
     }
+
+  char digit; //character input from .rf file. 
+  int index(0), count(0), occurences[26];
+  
+  /*
+    - index is the buffer in between swapping values.
+    - count counts the number of int inputs.
+    - occurences counts the number of times a number has been read.
+  */
+
+  for(int k = 0; k < 26; k++)
+    occurences[k] = 0;
 
   inflow.get(digit);
   
@@ -50,7 +54,7 @@ Reflector::Reflector(char* filename)
 	- number is the int equivalent of input characters.
       */
       
-      if(!isDigit(digit))  //Next character must be a digit, 
+      if(isWhiteSpace(digit))  //Next character must be a digit, 
 	{                          //otherwise incorrectly configured file.
 	  cerr << "Impossible reflector configuration in " << filename
 	       << " - file is not well-formed." << endl;
@@ -77,7 +81,7 @@ Reflector::Reflector(char* filename)
 	  
 	}
       
-      if(number < 0 || number > 25) //Checks valid input number in .pb file.
+      if(number < 0 || number > 25) //Checks valid input number in .rf file.
 	{
 	  cerr << number << " is an invalid index in file " 
 	       << filename << endl;
@@ -90,24 +94,42 @@ Reflector::Reflector(char* filename)
 	}
       else
 	{
-	  config[index] = number; //Implements plugboard 'switch'.
+	  config[index] = number; //Implements reflector mapping.
 	  config[number] = index;
+	}
+
+      occurences[number]++;
+
+      if(occurences[number] > 1) //Checks if number has already been read.
+	{
+	  cerr << "Error:" << endl
+	       << "Invalid reflector mapping - Too many " << number 
+	       << "s in file " 
+	       << filename << ".\n";
+	  exit(9);
 	}
       
       inflow.get(digit);
 
       count++;
+
+      if(count > 26) //Catches excessive number of parameter in .rf file.
+	{
+	  cerr << "Too many parameters in reflector file:  " 
+	       << filename << endl;
+	  exit(10);
+	}
     }
-  
-  if(count != 26) //Must have 26 numbers in .rf file.
+
+  if(count < 26) //Checks if enough parameter after having read all numbers.
     {
-      cerr << "Incorrect number of parameters in reflector file:  " 
+      cerr << "Insufficient number of parameters in reflector file:  " 
 	   << filename << endl;
       exit(10);
     }
   
   
-  if(validConfig(config))
+  if(validConfig(config)) //Final check.
     {
       cerr << "Impossible reflector configuration:" << endl
 	   << "Too many/few " << validConfig(config)
@@ -123,7 +145,7 @@ void Reflector::passThrough(int& n)
 {
   if(n < 0 || n > 25)
     {
-      cerr << "Error: n must be between 0 and 25.\n";
+      cerr << "Error in reflector: n must be between 0 and 25.\n";
       return;
     }
   

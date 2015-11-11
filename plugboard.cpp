@@ -1,5 +1,5 @@
-/*Plugboard part of enigma machine. Can insert plugs into pairs of sockets to swap values
-of input/output.*/
+/*Plugboard part of enigma machine. Can insert plugs into pairs of sockets 
+to swap values of input/output.*/
 
 //Ario Aliabadi
 //asa215@ic.ac.uk
@@ -21,19 +21,6 @@ Plugboard::Plugboard(char* filename)
 {
   cout << "Constructing plugboard from file " << filename << "..." << endl;
   
-  for(int k = 0; k < 26; k++)
-    {
-      config[k] = k; //Default set-up.
-    }
-  
-  char digit; //character input from .pb file. 
-  int index(0), count(0);
-  
-  /*
-    - index is the buffer in between swapping values.
-    - count counts the number of int inputs.
-  */
-  
   ifstream inflow;
   inflow.open(filename);
 
@@ -42,6 +29,23 @@ Plugboard::Plugboard(char* filename)
       cerr << "Error: Unable to open file: " << filename << ".\n";
       exit(11);
     }
+
+  for(int k = 0; k < 26; k++)
+    {
+      config[k] = k; //Default set-up.
+    }
+  
+  char digit; //character input from .pb file. 
+  int index(0), count(0), occurences[26];
+  
+  /*
+    - index is the buffer in between swapping values.
+    - count counts the number of int inputs.
+    - occurences counts the number of times a number has been read.
+  */
+
+  for(int k = 0; k < 26; k++)
+    occurences[k] = 0;
 
   inflow.get(digit);
   
@@ -54,7 +58,7 @@ Plugboard::Plugboard(char* filename)
 	- number is the int equivalent of input characters.
       */
 
-      if(!isDigit(digit))  //Next character must be a digit, 
+      if(isWhiteSpace(digit))  //Next character must be a digit, 
 	{                          //otherwise incorrectly configured file.
 	  cerr << "Impossible plugboard configuration in " << filename
 	       << " - file is not well-formed." << endl;
@@ -98,6 +102,17 @@ Plugboard::Plugboard(char* filename)
 	  config[number] = index;
 	}
 
+      occurences[number]++;
+
+      if(occurences[number] > 1) //Checks if number has already been read.
+	{
+	  cerr << "Error:" << endl
+	       << "Invalid reflector mapping - Too many " << number 
+	       << "s in file " 
+	       << filename << ".\n";
+	  exit(9);
+	}
+
       inflow.get(digit);
       
       count++;
@@ -111,7 +126,7 @@ Plugboard::Plugboard(char* filename)
     }
   
   
-  if(validConfig(config))
+  if(validConfig(config)) //Final check.
     {
       cerr << "Impossible plugboard configuration:" << endl
 	   << "Too many/few " << validConfig(config)
@@ -120,8 +135,8 @@ Plugboard::Plugboard(char* filename)
     }
   
   cout << "Construction of plugboard complete." << endl << endl;
-}
 
+}
 
 //Precondition: n is an integer between 0 and 25.
 //Simulates the (n+1)th letter passing through the plugboard.
@@ -130,7 +145,7 @@ void Plugboard::passThrough(int& n)
 {
   if(n < 0 || n > 25)
     {
-      cerr << "Error: n must be between 0 and 25.\n";
+      cerr << "Error: in plugboard: n must be between 0 and 25.\n";
       return;
     }
   

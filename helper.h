@@ -6,6 +6,9 @@ char int_to_digit(int number);
 char int_to_letter(int number);
 int letter_to_int(char alpha);
 bool isDigit(char digit);
+bool isLetter(char character);
+bool isWhiteSpace(char character);
 bool validConfig(int nums[26]);
+
 
 #endif

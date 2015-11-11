@@ -50,6 +50,28 @@ bool isDigit(char digit)
     return true;
 }
 
+//Precondition: character is an initialised char variable.
+//Returns true if character is an alphabetic character. False otherwise.
+bool isLetter(char character)
+{
+  if((character >= 'a' && character <= 'z') ||
+     (character >= 'A' && character <= 'Z'))
+     {
+       return true;
+     }
+
+return false;
+}
+
+bool isWhiteSpace(char character)
+{
+  if(character == 32 || character == 10 || character == 9 ||
+     character == 13)
+    return true;
+
+  return false;
+}
+
 
 //Precondition: nums[] is a filled array of integers.
 //Returns true if nums[] is a valid configuration for a plugboard.
