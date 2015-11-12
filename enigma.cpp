@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
+#include "configuration.h"
 #include "rotor.h"
 #include "plugboard.h"
 #include "reflector.h"
@@ -10,17 +11,24 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-  //  char repeat;
-
-  //  do
-  //  {
-      // char letter;
-      // int num_input;
+  /* For testing readPosition().
 
       Plugboard pb(argv[1]);
       Reflector rf(argv[2]);
       Rotor rot1(argv[3]);
+  */
 
+  int* a = new int[3]; 
+
+  readPositions(a, 3, argv[1]);
+
+  for(int k = 0; k< 3; k++)
+    cout << a[k] << " ";
+
+  cout << endl;
+
+  /*
+ 
       //Prints alphabet.
 
       for(int k = 0; k < 26; k++)
@@ -43,28 +51,6 @@ int main(int argc, char** argv)
 
       cout << endl;
 
-	  /*
-	  for(int k = 0; k < 26; k++)
-	{
-	  int buff = k;
-
-	  pb.passThrough(buff);
-	  rot1.passThrough_R2L(buff);
-	  rf.passThrough(buff);
-	  rot1.passThrough_L2R(buff);
-	  pb.passThrough(buff);
-
-	  pb.passThrough(buff);
-	  rot1.passThrough_R2L(buff);
-	  rf.passThrough(buff);
-	  rot1.passThrough_L2R(buff);
-	  pb.passThrough(buff);	  
-
-	  cout << int_to_letter(buff);
-	}
-
-      cout << endl;
-	  */
 
       //Writes a full pass through the enigma of each letter 
       //in the alphabet to the output.igm file.
@@ -122,39 +108,7 @@ int main(int argc, char** argv)
 	  in.get(toprint);
 	}
 
-
-
-
-
-
-
-      /*
-      cout << "What letter would you like to pass through the plugboard?"
-	   << endl;
-
-      cin >> letter;
-
-      num_input = letter_to_int(letter);
-
-      cout << num_input << endl;
-
-      cout << "After passing the letter " << letter
-	   << " through the plugboard, the result is: ";
-
-      pb.passThrough(num_input);
-
-      letter = int_to_letter(num_input);
-
-      cout << letter << endl;
-
-      */
-
-      //      cout << endl << endl << "Start again? (y/n)" << endl;
-      //      cin >> repeat;
-
-      //    }
-      //  while(repeat == 'y' || repeat == 'Y');
-
+  */
 
       cout << endl << endl << "End of testing." << endl;
 
