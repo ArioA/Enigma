@@ -21,6 +21,8 @@ int main(int argc, char** argv)
       Reflector rf(argv[2]);
       Rotor rot1(argv[3]);
 
+      //Prints alphabet.
+
       for(int k = 0; k < 26; k++)
 	{
 	  cout << int_to_letter(k);
@@ -28,6 +30,8 @@ int main(int argc, char** argv)
 
       cout << endl;
 
+      //Prints plugboard's effect.
+
       for(int k = 0; k < 26; k++)
 	{
 	  int buff = k;
@@ -36,25 +40,6 @@ int main(int argc, char** argv)
 	  
 	  cout << int_to_letter(buff);
 	}
-
-      cout << endl;
-
-      for(int k = 0; k < 26; k++)
-	{
-	  int buff = k;
-
-	  pb.passThrough(buff);
-	  rot1.passThrough_R2L(buff);
-	  rf.passThrough(buff);
-	  rot1.passThrough_L2R(buff);
-	  pb.passThrough(buff);
-	  
-	  cout << int_to_letter(buff);
-	}
-
-      cout << endl;
-
-      rot1.print_config();
 
       cout << endl;
 
@@ -81,18 +66,20 @@ int main(int argc, char** argv)
       cout << endl;
 	  */
 
+      //Writes a full pass through the enigma of each letter 
+      //in the alphabet to the output.igm file.
+
       ofstream write("output.igm");
 
       for(int k = 0; k < 26; k++)
 	{
-	  int buff = 0;
+	  int buff = k;
 
-	  rot1.print_config();
-
-	  cout << endl;
+	  //rot1.print_config();
+	  //cout << endl;
 
 	  rot1.rotate();
-	  /*
+	  
 	  pb.passThrough(buff);
 	  rot1.passThrough_R2L(buff);
 	  rf.passThrough(buff);
@@ -100,7 +87,7 @@ int main(int argc, char** argv)
 	  pb.passThrough(buff);
 	  
 	  write << int_to_letter(buff);
-	  */
+	  
 	}
 
       write << '\n';
@@ -114,33 +101,31 @@ int main(int argc, char** argv)
 
       in.get(toprint);
 
+      //Reads the output.igm file and decrypts it.
+      //Note: this works because we write to output.igm 26 times,
+      //and so the rotor is back in it's original position.
+
       while(!in.eof() && toprint != '\n')
 	{
 	  numprint = letter_to_int(toprint);
 
-	  cout << toprint << " " << numprint << " ";
+	  rot1.rotate();
 
+	  pb.passThrough(numprint);
 	  rot1.passThrough_R2L(numprint);
-	  
-	  cout << numprint << endl;
+	  rf.passThrough(numprint);
+	  rot1.passThrough_L2R(numprint);
+	  pb.passThrough(numprint);
+
+	  cout << int_to_letter(numprint);
 
 	  in.get(toprint);
 	}
 
-      int param;
 
-      rot1.print_config();
 
-      for(int k = 0; k < 26; k++)
-	{
-	  param = 16;
 
-	  rot1.passThrough_R2L(param);
 
-	  cout << param << endl;
-	}
-
-      cout << endl;
 
 
       /*
