@@ -5,6 +5,7 @@
 #include "helper.h"
 #include "configuration.h"
 #include "errors.h"
+#include "rotor.h"
 
 using namespace std;
 
@@ -91,3 +92,19 @@ void readPositions(int* a, int length, char* filename)
   cout << "Extraction complete." << endl;
   
 }
+
+
+//Precondition: rot_ptr is a pointer to the rotor
+//which is to be configured. Position is the position
+//which the rotor in question is to be configured to.
+//Postcondition: *rot_ptr is rotated position times. 
+//So that the position indexed letter is aligned with
+//the 'absolute A'.
+void configurePosition(Rotor* rot_ptr, int position)
+{
+  for(int k = 0; k < position; k++)
+    {
+      rot_ptr->rotate();
+    }
+}
+

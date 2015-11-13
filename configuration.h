@@ -1,6 +1,8 @@
 #ifndef CONFIGURATION_H
 #define CONFIGURATION_H
 
-void readPositions(int* a, int length, char* filename);
+#include "rotor.h"
 
+void readPositions(int* a, int length, char* filename);
+void configurePosition(Rotor* rot_ptr, int position);
 #endif

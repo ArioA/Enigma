@@ -11,6 +11,37 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+  /*
+    Errors relating to argument numbers go here.
+    
+if(argc == 1){ERROR...}
+
+if(argc == 3){ERROR...}
+  */
+
+
+
+  if(argc > 4)
+    {  
+      int no_rotors(argc - 4);
+
+      int* positions = new int[no_rotors];
+     
+      readPositoins(positions, no_rotors, argv[argc -1]);
+     
+      Rotor** linkedRotors = new Rotor*[no_rotors];
+
+      for(int k = 0; k < no_rotors; k++)
+	{
+	  /*rotors are configured as they appear on command line(check).*/
+	  linkedRotors[k](argv[argc - 1 - k]);
+	  configurePosition(linkedRotors[k], positions[k]);
+	  //check spec: not sure if this is right.
+	}
+
+      
+    }
+
   /* For testing readPosition().
 
       Plugboard pb(argv[1]);
@@ -26,6 +57,8 @@ int main(int argc, char** argv)
     cout << a[k] << " ";
 
   cout << endl;
+
+  
 
   /*
  
