@@ -42,18 +42,13 @@ if(argc == 3){ERROR...}
 
 	  		cout << "Rotor linked." << endl;
 
-			linkedRotors[k]->print_config();
-
 	  		configurePosition(linkedRotors[k], positions[no_rotors - 1 - k]);
-
-	  		linkedRotors[k]->print_config();
-	  		//check spec: not sure if this is right.
 		}
 
 		char input_output;
 		int num_io;
 
-		cout << "Enter in CAPITAL letters"
+		cout << "Enter in CAPITAL letters "
 			 << "what you would like to have encrytped." << endl
 			 << "Press '.' when you are done." << endl;
 

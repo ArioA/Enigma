@@ -118,6 +118,7 @@ void configurePosition(Rotor* rot_ptr, int position)
 void passThroughEnigma(Rotor** rotorList, int rotors,
   Plugboard* pb, Reflector* rf, int& n)
 {
+  
   rotorList[0]->rotate();
 
   for(int k = 0; k < rotors-1; k++)
@@ -126,19 +127,29 @@ void passThroughEnigma(Rotor** rotorList, int rotors,
       rotorList[k+1]->rotate();
   }
 
+  //cout << "PB: " << n << " goes to ";
   pb->passThrough(n);
+  //cout << n << endl;
 
   for(int k = 0; k < rotors; k++)
   {
+    //cout << "Rot " << k << ": " << n;
     rotorList[k]->passThrough_R2L(n);
+    //cout << " goes to " << n << endl;
   }
 
+  //cout << "RF: " << n << " goes to ";
   rf->passThrough(n);
+  //cout << n << endl;
 
-  for(int k = 0; k < rotors; k++)
+  for(int k = rotors-1; k >= 0; k--)
   {
+    //cout << "Rot " << k << ": " << n;
     rotorList[k]->passThrough_L2R(n);
+    //cout << " goes to " << n << endl;
   }
 
+  //cout << "PB: " << n << " goes to ";
   pb->passThrough(n);
+  //cout << n << endl;
 }
