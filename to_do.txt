@@ -1,0 +1,6 @@
+-Create delete for pbPtr and rfPtr.
+-integrate isWhiteSpace into file reading functions. Either that or use
+ << opperator for characters.
+-Write errors for incorrect number of parameters in command line.
+- Write code for case when there are no rotors.
+- 'functionalise' as much of constructors in plugboard.pb, reflector.rf and rotor.cpp. Have a look at the one in configuration.cpp as well.

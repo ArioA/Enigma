@@ -5,7 +5,6 @@
 #include "helper.h"
 #include "configuration.h"
 #include "errors.h"
-#include "rotor.h"
 
 using namespace std;
 
@@ -81,6 +80,8 @@ void readPositions(int* a, int length, char* filename)
       exit(8);
     }
 
+  inflow.get(digit);
+
   if(!inflow.eof())
     {
       cerr << "Error: No rotor starting position - " << endl
@@ -108,3 +109,36 @@ void configurePosition(Rotor* rot_ptr, int position)
     }
 }
 
+//Precondition: rotorList is a list of initialised Rotor pointers, where
+//rotorList[0] points to the rightmost rotor. 'rotors' in the number of rotors.
+//pb points to an initialised Plugboard. rf points to an initialised
+//reflector, and n is a letter index (0 to 25) to be passed through.
+//Postcondtition: n has been encrypted and all rotors have been 
+//rotated as appropriate.
+void passThroughEnigma(Rotor** rotorList, int rotors,
+  Plugboard* pb, Reflector* rf, int& n)
+{
+  rotorList[0]->rotate();
+
+  for(int k = 0; k < rotors-1; k++)
+  {
+    if(rotorList[k]->get_notch(0))
+      rotorList[k+1]->rotate();
+  }
+
+  pb->passThrough(n);
+
+  for(int k = 0; k < rotors; k++)
+  {
+    rotorList[k]->passThrough_R2L(n);
+  }
+
+  rf->passThrough(n);
+
+  for(int k = 0; k < rotors; k++)
+  {
+    rotorList[k]->passThrough_L2R(n);
+  }
+
+  pb->passThrough(n);
+}
