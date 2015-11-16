@@ -6,13 +6,14 @@ class Rotor
  private:
   int config[26];
   bool notch[26];
+  int missalignment;
 
  public:
-  Rotor(char* filename);
+  Rotor(char* filename, int malign);
   void passThrough_L2R(int& n);
   void passThrough_R2L(int& n);
   void rotate();
-  bool get_notch(int index);
+  bool get_notch();
   void print_config();
 };
 

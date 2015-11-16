@@ -139,14 +139,16 @@ Plugboard::Plugboard(char* filename)
 }
 
 //Precondition: n is an integer between 0 and 25.
-//Simulates the (n+1)th letter passing through the plugboard.
-//Changes n's value according to plugboard configuration. 
+//Postcondition: Simulates the (n+1)th letter passing through the plugboard.
+//Invalid input character error lives here since plugboard is always
+//the first component which input passes through. 
 void Plugboard::passThrough(int& n)
 {
   if(n < 0 || n > 25)
     {
-      cerr << "Error: in plugboard: n must be between 0 and 25.\n";
-      return;
+      cerr << "Invalid Input Character Error:" << endl
+	   << "'" << int_to_letter(n) << "' is not a captial letter." << endl;
+      exit(2);
     }
   
   n = config[n];

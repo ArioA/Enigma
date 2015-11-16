@@ -90,6 +90,8 @@ void readPositions(int* a, int length, char* filename)
       exit(8);
     }
 
+  inflow.close();
+
   cout << "Extraction complete." << endl;
   
 }
@@ -121,35 +123,34 @@ void passThroughEnigma(Rotor** rotorList, int rotors,
   
   rotorList[0]->rotate();
 
-  for(int k = 0; k < rotors-1; k++)
+  for(int k = 0; k < rotors - 2 && rotorList[k]->get_notch(); k++)
   {
-    if(rotorList[k]->get_notch(0))
-      rotorList[k+1]->rotate();
+    rotorList[k+1]->rotate();
   }
 
-  //cout << "PB: " << n << " goes to ";
+  cout << "PB: " << n << " goes to ";
   pb->passThrough(n);
-  //cout << n << endl;
+  cout << n << endl;
 
   for(int k = 0; k < rotors; k++)
   {
-    //cout << "Rot " << k << ": " << n;
+    cout << "Rot " << k << ": " << n;
     rotorList[k]->passThrough_R2L(n);
-    //cout << " goes to " << n << endl;
+    cout << " goes to " << n << endl;
   }
 
-  //cout << "RF: " << n << " goes to ";
+  cout << "RF: " << n  << " goes to ";
   rf->passThrough(n);
-  //cout << n << endl;
+  cout << n << endl;
 
   for(int k = rotors-1; k >= 0; k--)
   {
-    //cout << "Rot " << k << ": " << n;
+    cout << "Rot " << k << ": " << n;
     rotorList[k]->passThrough_L2R(n);
-    //cout << " goes to " << n << endl;
+    cout << " goes to " << n << endl;
   }
 
-  //cout << "PB: " << n << " goes to ";
+  cout << "PB: " << n << " goes to ";
   pb->passThrough(n);
-  //cout << n << endl;
+  cout << n << endl;
 }

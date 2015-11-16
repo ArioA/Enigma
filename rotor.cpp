@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Rotor::Rotor(char* filename)
+Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
 {
   cout << "Constructing rotor from " << filename << "..." << endl;
 
@@ -156,7 +156,10 @@ void Rotor::passThrough_R2L(int& n)
       exit(3);
     }
 
-  n = config[n];
+  n = ((config[(n + missalignment) % 26] - missalignment) % 26);
+
+  if(n < 0)
+    n += 26; 
 }
 
 void Rotor::passThrough_L2R(int& n)
@@ -170,7 +173,8 @@ void Rotor::passThrough_L2R(int& n)
 
   for(int k = 0; k < 26; k++)
     {
-      if(n == config[k])
+      if(n == ((config[(k + missalignment) % 26] - missalignment) % 26)
+	 || n == ((config[(k + missalignment) % 26] - missalignment) % 26) + 26)
 	{
 	  n = k;
 	  return;
@@ -180,22 +184,12 @@ void Rotor::passThrough_L2R(int& n)
 
 void Rotor::rotate()
 {
-  int intTemp(config[0]);
-  bool boolTemp(notch[0]);
-
-  for(int k = 0; k < 26; k++)
-    {
-      config[k] = config[k+1];
-      notch[k] = notch[k+1];
-    }
-
-  config[25] = intTemp;
-  notch[25] = boolTemp;
+  missalignment = (missalignment + 1) % 26;
 }
 
-bool Rotor::get_notch(int index)
+bool Rotor::get_notch()
 {
-  return notch[index];
+  return notch[missalignment];
 }
 
 void Rotor::print_config()

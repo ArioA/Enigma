@@ -33,16 +33,16 @@ int main(int argc, char** argv)
       
       readPositions(positions, no_rotors, argv[argc -1]);
       
+      for(int k = 0; k < no_rotors; k++)
+	cout << positions[k] << " ";
+      
       RotorPtr* linkedRotors = new RotorPtr[no_rotors];
       
       for(int k = 0; k < no_rotors; k++)
 	{
 	  /*rotors are configured as they appear on command line(check).*/
-	  linkedRotors[k] = new Rotor(argv[argc - 2 - k]);
-	  
-	  cout << "Rotor linked." << endl;
-	  
-	  configurePosition(linkedRotors[k], positions[no_rotors - 1 - k]);
+	  linkedRotors[k] = new Rotor(argv[argc - 2 - k], 
+				      positions[no_rotors - 1 - k]);
 	}
       
       char input_output;
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 	   << "Press '.' when you are done." << endl;
       
       cin.get(input_output);
-      
+
       while(input_output != '.')
 	{
 	  if(isWhiteSpace(input_output))
@@ -64,7 +64,8 @@ int main(int argc, char** argv)
 	    }
 	  
 	  num_io = letter_to_int(input_output);
-	  passThroughEnigma(linkedRotors, no_rotors, pbPtr, rfPtr, num_io);		
+	  cout << num_io << endl;
+	  passThroughEnigma(linkedRotors, no_rotors, pbPtr, rfPtr, num_io);
 	  
 	  cout << int_to_letter(num_io);
 	  
