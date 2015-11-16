@@ -59,6 +59,7 @@ if(argc == 3){ERROR...}
 			if(isWhiteSpace(input_output))
 			{
 				cout << input_output;
+				cin >> input_output;
 				continue;
 			}
 
