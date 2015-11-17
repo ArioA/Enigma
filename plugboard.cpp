@@ -17,9 +17,7 @@ using namespace std;
 //Constructor:
 
 Plugboard::Plugboard(char* filename)
-{
-  cout << "Constructing plugboard from file " << filename << "..." << endl;
-  
+{  
   ifstream inflow;
   inflow.open(filename);
 
@@ -121,8 +119,6 @@ Plugboard::Plugboard(char* filename)
     }
 
   inflow.close();
-  
-  cout << "Construction of plugboard complete." << endl << endl;
 }
 
 //Precondition: n is an integer between 0 and 25.

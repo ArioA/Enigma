@@ -9,8 +9,6 @@ using namespace std;
 
 Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
 {
-  cout << "Constructing rotor from " << filename << "..." << endl;
-
   ifstream inflow;
   inflow.open(filename);
 
@@ -128,8 +126,6 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
     }
 
   inflow.close();
-
-  cout << "Rotor successfully constructed." << endl << endl;
 }
 
 void Rotor::passThrough_R2L(int& n)

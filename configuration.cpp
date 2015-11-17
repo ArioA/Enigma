@@ -12,8 +12,6 @@ using namespace std;
 //from the .pos file filename.
 void readPositions(int* a, int length, char* filename)
 {
-  cout << "Reading in positions...." << endl;
-
   ifstream inflow(filename);
 
   if(!inflow)
@@ -82,9 +80,6 @@ void readPositions(int* a, int length, char* filename)
     }
 
   inflow.close();
-
-  cout << "Extraction complete." << endl;
-  
 }
 
 

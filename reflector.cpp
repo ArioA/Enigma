@@ -18,9 +18,7 @@
 using namespace std;
 
 Reflector::Reflector(char* filename)
-{
-  cout << "Constructing Reflector from " << filename << "..." << endl;
-  
+{  
   ifstream inflow;
   inflow.open(filename);
 
@@ -124,8 +122,6 @@ Reflector::Reflector(char* filename)
     }
 
   inflow.close();
-
-  cout << "Reflector successfully constructed." << endl << endl;
 }
 
 
