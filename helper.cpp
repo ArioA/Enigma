@@ -68,6 +68,11 @@ bool isLetter(char character)
 return false;
 }
 
+
+/*Precondition: character is an initialised char.
+Postcondition: Returns true if character is either one of a space, tab, 
+carriage-return or newline according to the ASCII standard.
+*/
 bool isWhiteSpace(char character)
 {
   if(character == 32 || character == 10 || character == 9 ||
@@ -108,6 +113,12 @@ int validConfig(int nums[26])
 
 //====================================================================
 
+/*Precondition: _inflow is an opened istream and reads from _filename.
+_filename either a .pb, .rot, .rf or .pos file. 
+Postcondition: Returns the number which has been read in. If a non-numeric
+character is contained in _filename, then the NON_NUMERIC_CHARACTER error will
+been invoked and this will be caught by the object constructor.
+*/
 
 int readNumber(istream& _inflow, char& _digit, char* _filename)
 {
@@ -141,12 +152,12 @@ int readNumber(istream& _inflow, char& _digit, char* _filename)
 }
 
 
-//Precondition: rotorList is a list of initialised Rotor pointers, where
-//rotorList[0] points to the rightmost rotor. 'rotors' in the number of rotors.
-//pb points to an initialised Plugboard. rf points to an initialised
-//reflector, and n is a letter index (0 to 25) to be passed through.
-//Postcondtition: n has been encrypted and all rotors have been 
-//rotated as appropriate.
+/*Precondition: rotorList is a list of initialised Rotor pointers, where
+rotorList[0] points to the rightmost rotor. 'rotors' in the number of rotors.
+pb points to an initialised Plugboard. rf points to an initialised
+reflector, and n is a letter index (0 to 25) to be passed through.
+Postcondtition: n has been encrypted, all rotors have rotated as appropriate.
+*/
 void passThroughEnigma(Rotor** rotorList, int rotors,
   Plugboard* pb, Reflector* rf, int& n)
 {
@@ -186,6 +197,13 @@ void passThroughEnigma(Rotor** rotorList, int rotors,
 }
 
 
+/*Precondition: linkedRotors is an array of pointers to 'number_of_rotors'
+rotors. pbPtr and rfPtr point to correctly configured plugboard and reflector
+respectively.
+Postcondition: Prompts user for a message ending in '.' to encrypt via the
+standard input (keyboard). Sends encrypted message to the standard output
+(monitor). INVALID_INPUT_CHARACTER error is picked up by passThroughEnigma().
+ */
 void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
 	     ReflectorPtr rfPtr)
 {
@@ -210,6 +228,11 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
     }
 }
 
+/*Precondition: similar to the above, pbPtr and rfPtr point to a plugboard and
+rotor respectively.
+Postcondition: Same as above. This is to be used when there are no rotors
+present. INVALID_INPUT_CHARACTER error is picked up by passThrough().
+*/
 void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr)
 {
   char input_output;

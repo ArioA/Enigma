@@ -1,6 +1,7 @@
 - 'functionalise' as much of constructors in plugboard.pb,
 reflector.rf and rotor.cpp. Have a look at the one in
-configuration.cpp as well.
+configuration.cpp as well. (mostly done)
 - Modify all functions containing exit() so that they pass by
 reference a int errno parameter and return to the main with errno as
 the error number if an error is encountered.
+- ^Move Invalid Input character from passThrough into encrypt. 

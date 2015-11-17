@@ -7,7 +7,7 @@
 
 using namespace std;
 
-//Precondition: a[] is an array of length 'lenght'. 
+//Precondition: a[] is an array of length 'length'. 
 //Postcondition: a[] is filled with numbers 
 //from the .pos file filename.
 void readPositions(int* a, int length, char* filename)
