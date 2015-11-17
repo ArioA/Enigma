@@ -212,11 +212,11 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
   
   cout << "Enter in CAPITAL letters "
        << "what you would like to have encrytped." << endl
-       << "Press '.' when you are done." << endl;
+       << "Press Enter when you are done." << endl;
   
-  cin >> input_output;
+  cin.get(input_output);
   
-  while(input_output != '.')
+  while(input_output != '\n')
     { 
       num_io = letter_to_int(input_output);
       
@@ -224,7 +224,7 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
       
       cout << int_to_letter(num_io);
       
-      cin >> input_output;
+      cin.get(input_output);
     }
 }
 
@@ -240,11 +240,11 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr)
   
   cout << "Enter in CAPITAL letters "
        << "what you would like to have encrytped." << endl
-       << "Press '.' when you are done." << endl;
+       << "Press Enter when you are done." << endl;
   
-  cin >> input_output;
+  cin.get(input_output);
   
-  while(input_output != '.')
+  while(input_output != '\n')
     { 
       num_io = letter_to_int(input_output);
       
@@ -254,6 +254,6 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr)
       
       cout << int_to_letter(num_io);
       
-      cin >> input_output;
+      cin.get(input_output);
     }
 }
