@@ -52,24 +52,24 @@ int main(int argc, char** argv)
 	   << "what you would like to have encrytped." << endl
 	   << "Press '.' when you are done." << endl;
       
-      cin.get(input_output);
+      cin >> input_output;
 
       while(input_output != '.')
 	{
 	  if(isWhiteSpace(input_output))
 	    {
 	      cout << input_output;
-	      cin.get(input_output);
+	      cin >> input_output;
 	      continue;
 	    }
 	  
 	  num_io = letter_to_int(input_output);
-	  cout << num_io << endl;
+
 	  passThroughEnigma(linkedRotors, no_rotors, pbPtr, rfPtr, num_io);
 	  
 	  cout << int_to_letter(num_io);
 	  
-	  cin.get(input_output);
+	  cin >> input_output;
 	}
       
       for(int k = 0; k < no_rotors; k++)
@@ -82,83 +82,6 @@ int main(int argc, char** argv)
   delete [] pbPtr;
   delete [] rfPtr;
   
-  /* For testing readPosition().
-     
-     Plugboard pb(argv[1]);
-     Reflector rf(argv[2]);
-     Rotor rot1(argv[3]);
-  */
-  
-  
-  /*
-  //Prints alphabet.
-  
-  for(int k = 0; k < 26; k++)
-  {
-  cout << int_to_letter(k);
-  }
-  
-  cout << endl;
-  
-  
-  //Writes a full pass through the enigma of each letter 
-      //in the alphabet to the output.igm file.
-      
-      ofstream write("output.igm");
-      
-      for(int k = 0; k < 26; k++)
-      {
-      int buff = k;
-      
-      //rot1.print_config();
-      //cout << endl;
-      
-      rot1.rotate();
-      
-      pb.passThrough(buff);
-      rot1.passThrough_R2L(buff);
-      rf.passThrough(buff);
-      rot1.passThrough_L2R(buff);
-      pb.passThrough(buff);
-      
-      write << int_to_letter(buff);
-      
-      }
-      
-      write << '\n';
-      
-      write.close();
-      
-      ifstream in("output.igm");
-      
-      char toprint;
-      int numprint;
-      
-      in.get(toprint);
-      
-      //Reads the output.igm file and decrypts it.
-      //Note: this works because we write to output.igm 26 times,
-      //and so the rotor is back in it's original position.
-      
-      while(!in.eof() && toprint != '\n')
-      {
-      numprint = letter_to_int(toprint);
-      
-      rot1.rotate();
-      
-      pb.passThrough(numprint);
-      rot1.passThrough_R2L(numprint);
-      rf.passThrough(numprint);
-      rot1.passThrough_L2R(numprint);
-      pb.passThrough(numprint);
-      
-      cout << int_to_letter(numprint);
-      
-      in.get(toprint);
-      }
-
-      
-  */
   cout << endl << "End of testing." << endl << endl;
   
   return 0;

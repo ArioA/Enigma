@@ -9,6 +9,6 @@ bool isDigit(char digit);
 bool isLetter(char character);
 bool isWhiteSpace(char character);
 bool validConfig(int nums[26]);
-
+int readNumber(std::istream &inflow, char& digit, char* filename);
 
 #endif

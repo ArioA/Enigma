@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <cmath>
 #include <cstdlib>
 #include "helper.h"
 #include "configuration.h"
@@ -37,26 +36,13 @@ void readPositions(int* a, int length, char* filename)
   
   while((!inflow.eof()) && (count <= length))
     {
-      int decimal(0), number(0);
+      int number(0);
       
-      while(digit != ' ' && digit != '\n')
+      number = readNumber(inflow, digit, filename);
+
+      if(number == -1)
 	{
-	  
-	  if(!isDigit(digit)) //Non-digit characters are not permited.
-	    {
-	      cerr << filename << " contains a non-numeric character.\n";
-	      exit(4);
-	    }
-	  
-	  //Works out what number is - based on number of loop cycles.
-	  
-	  number *= pow(10,decimal);
-	  number += digit_to_int(digit);
-	  
-	  inflow.get(digit);
-	  
-	  decimal++;
-	  
+	  cerr << "Invalid Character..." << endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 
       if(number < 0 || number > 25) //Checks valid input number in .rot file.
@@ -78,6 +64,11 @@ void readPositions(int* a, int length, char* filename)
 	   << filename << " has an insuffcient number of parameters." 
 	   << endl;
       exit(8);
+    }
+  
+  while(isWhiteSpace(inflow.peek()))
+    {
+      inflow.get(digit);
     }
 
   inflow.get(digit);
@@ -128,29 +119,29 @@ void passThroughEnigma(Rotor** rotorList, int rotors,
     rotorList[k+1]->rotate();
   }
 
-  cout << "PB: " << n << " goes to ";
+  //  cout << "PB: " << n << " goes to ";
   pb->passThrough(n);
-  cout << n << endl;
+  //cout << n << endl;
 
   for(int k = 0; k < rotors; k++)
   {
-    cout << "Rot " << k << ": " << n;
+    //cout << "Rot " << k << ": " << n;
     rotorList[k]->passThrough_R2L(n);
-    cout << " goes to " << n << endl;
+    //cout << " goes to " << n << endl;
   }
 
-  cout << "RF: " << n  << " goes to ";
+  //cout << "RF: " << n  << " goes to ";
   rf->passThrough(n);
-  cout << n << endl;
+  //cout << n << endl;
 
   for(int k = rotors-1; k >= 0; k--)
   {
-    cout << "Rot " << k << ": " << n;
+    //cout << "Rot " << k << ": " << n;
     rotorList[k]->passThrough_L2R(n);
-    cout << " goes to " << n << endl;
+    //cout << " goes to " << n << endl;
   }
 
-  cout << "PB: " << n << " goes to ";
+  //cout << "PB: " << n << " goes to ";
   pb->passThrough(n);
-  cout << n << endl;
+  //cout << n << endl;
 }

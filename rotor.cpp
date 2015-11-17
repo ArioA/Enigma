@@ -1,5 +1,4 @@
 #include<iostream>
-#include<cmath>
 #include<cstdlib>
 #include<fstream>
 #include"rotor.h"
@@ -34,7 +33,7 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
 
   for(int k = 0; k < 26; k++)
     {
-      int decimal(0), number(0);
+     int  number(0);
 
       if(inflow.eof())
 	{
@@ -44,24 +43,11 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
 	       << "number of parameters." << endl;
 	}
 
-      while(digit != ' ' && digit != '\n')
+      number = readNumber(inflow, digit, filename);
+
+      if(number == -1)
 	{
-	  
-	  if(!isDigit(digit)) //Non-digit characters are not permited.
-	    {
-	      cerr << filename << " contains a non-numeric character.\n";
-	      exit(4);
-	    }
-	  
-	  //Works out what number is - based on number of loop cycles.
-	  
-	  number *= pow(10,decimal);
-	  number += digit_to_int(digit);
-	  
-	  inflow.get(digit);
-	  
-	  decimal++;
-	  
+	  cerr << "Invalid Character..." << endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 
       if(number < 0 || number > 25) //Checks valid input number in .rot file.
@@ -85,6 +71,11 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
 	  exit(7);
 	}
       
+      while(isWhiteSpace(inflow.peek()))
+	{
+	  inflow.get(digit);
+	}
+
       inflow.get(digit);
     }
 
@@ -100,27 +91,13 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
   
   while(!inflow.eof())
     {
-      int decimal(0), number(0);
+      int number(0);
       
-      while(digit != ' ' && digit != '\n')
+      number = readNumber(inflow, digit, filename);
+
+      if(number == -1)
 	{
-	  
-	  if(!isDigit(digit)) //Non-digit characters are not permited.
-	    {
-	      cerr << "Error: " <<  filename 
-		   << " contains a non-numeric character.\n";
-	      exit(4);
-	    }
-	  
-	  //Works out what number is - based on number of loop cycles.
-	  
-	  number *= pow(10,decimal);
-	  number += digit_to_int(digit);
-	  
-	  inflow.get(digit);
-	  
-	  decimal++;
-	  
+	  cerr << "Invalid Character..." << endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
       
       if(number < 0 || number > 25) //Checks valid input number in .rot file.
@@ -142,8 +119,15 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
       else
 	notch[number] = true;
 
+      while(isWhiteSpace(inflow.peek()))
+	{
+	  inflow.get(digit);
+	}
+
       inflow.get(digit);
     }
+
+  inflow.close();
 
   cout << "Rotor successfully constructed." << endl << endl;
 }

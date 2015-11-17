@@ -8,7 +8,6 @@
 - NON-NUMERIC_CHAR
 */
 
-#include<cmath>
 #include<fstream>
 #include<cstdlib>
 #include<iostream>
@@ -48,7 +47,7 @@ Reflector::Reflector(char* filename)
   while(!inflow.eof())
     {
       
-      int decimal(0), number(0);
+      int number(0);
       /*
 	- decimal counts what power of 10 the input char is.
 	- number is the int equivalent of input characters.
@@ -61,25 +60,7 @@ Reflector::Reflector(char* filename)
 	  exit(5);
 	}
       
-      while(digit != ' ' && digit != '\n')
-	{
-	  
-	  if(!isDigit(digit)) //Non-digit characters are not permited.
-	    {
-	      cerr << filename << " contains a non-numeric character.\n";
-	      exit(4);
-	    }
-	  
-	  //Works out what number is - based on number of loop cycles.
-	  
-	  number *= pow(10,decimal);
-	  number += digit_to_int(digit);
-	  
-	  inflow.get(digit);
-	  
-	  decimal++;
-	  
-	}
+      number = readNumber(inflow, digit, filename);
       
       if(number < 0 || number > 25) //Checks valid input number in .rf file.
 	{
@@ -109,6 +90,11 @@ Reflector::Reflector(char* filename)
 	  exit(9);
 	}
       
+      while(isWhiteSpace(inflow.peek()))
+	{
+	  inflow.get(digit);
+	}
+
       inflow.get(digit);
 
       count++;
@@ -136,6 +122,8 @@ Reflector::Reflector(char* filename)
 	   << "s in this file." << endl;
       exit(9);
     }
+
+  inflow.close();
 
   cout << "Reflector successfully constructed." << endl << endl;
 }

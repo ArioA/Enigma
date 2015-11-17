@@ -8,7 +8,6 @@ to swap values of input/output.*/
 #include<cstdlib>
 #include<iostream>
 #include<fstream>
-#include<cmath>
 #include"plugboard.h"
 #include"helper.h"
 #include"errors.h"
@@ -52,7 +51,7 @@ Plugboard::Plugboard(char* filename)
   while(!inflow.eof())
     {
       
-      int decimal(0), number(0);
+      int number;
       /*
 	- decimal counts what power of 10 the input char is.
 	- number is the int equivalent of input characters.
@@ -64,27 +63,9 @@ Plugboard::Plugboard(char* filename)
 	       << " - file is not well-formed." << endl;
 	  exit(5);
 	}
-      
-      while(digit != ' ' && digit != '\n')
-	{
-	  
-	  if(!isDigit(digit)) //Non-digit characters are not permited.
-	    {
-	      cerr << filename << " contains a non-numeric character.\n";
-	      exit(4);
-	    }
-	  
-	  //Works out what number is - based on number of loop cycles.
-	  
-	  number *= pow(10,decimal);
-	  number += digit_to_int(digit);
-	  
-	  inflow.get(digit);
-	  
-	  decimal++;
-	  
-	}
-      
+
+      number = readNumber(inflow, digit, filename);
+
       if(number < 0 || number > 25) //Checks valid input number in .pb file.
 	{
 	  cerr << number << " is an invalid index in file " 
@@ -113,6 +94,11 @@ Plugboard::Plugboard(char* filename)
 	  exit(9);
 	}
 
+      while(isWhiteSpace(inflow.peek()))
+	{
+	  inflow.get(digit);
+	}
+
       inflow.get(digit);
       
       count++;
@@ -133,9 +119,10 @@ Plugboard::Plugboard(char* filename)
 	   << "s on this board." << endl;
       exit(5);
     }
+
+  inflow.close();
   
   cout << "Construction of plugboard complete." << endl << endl;
-
 }
 
 //Precondition: n is an integer between 0 and 25.

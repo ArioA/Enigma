@@ -1,4 +1,5 @@
 #include<iostream>
+#include<cmath>
 
 using namespace std;
 
@@ -102,3 +103,35 @@ int validConfig(int nums[26])
 }
 
 //====================================================================
+
+
+int readNumber(istream& _inflow, char& _digit, char* _filename)
+{
+  int decimal(0), number(0);
+
+  /*
+    - decimal counts what power of 10 the input char is.
+    - number is the int equivalent of input characters.
+  */
+
+  while(_digit != ' ' && _digit != '\n')
+    {
+      
+      if(!isDigit(_digit)) //Non-digit characters are not permited.
+	{
+	  cerr << _filename << " contains a non-numeric character.\n";
+	  return -1;
+	}
+      
+      //Works out what number is - based on number of loop cycles.
+      
+      number *= pow(10,decimal);
+      number += digit_to_int(_digit);
+      
+      _inflow.get(_digit);
+      
+      decimal++;      
+    }
+
+  return number;
+}
