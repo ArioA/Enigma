@@ -13,71 +13,64 @@ typedef Rotor* RotorPtr;
 
 int main(int argc, char** argv)
 {
-  /*
-    Errors relating to argument numbers go here.
-    
-    if(argc == 1){ERROR...}
-    
-    if(argc == 3){ERROR...}
-  */
+
+  //Catches incorrect number of parameters.
+  if(argc <= 2 || argc == 4)
+    {
+      cerr << "Insufficient Number of Parameters Error:" << endl
+	   << "You cannot have " << argc;
+      if(argc-1)
+	cout << " parameters." << endl;
+      else
+	cout << " parameter." << endl;
+
+      return 1;
+    }
   
+  //Create plugboard.
   Plugboard* pbPtr = new Plugboard(argv[1]);
   
+
+  //Create reflector.
   Reflector* rfPtr = new Reflector(argv[2]);
   
-  if(argc > 4)
-    {  
-      int no_rotors(argc - 4);
-      
-      int* positions = new int[no_rotors];
-      
-      readPositions(positions, no_rotors, argv[argc -1]);
-      
-      for(int k = 0; k < no_rotors; k++)
-	cout << positions[k] << " ";
-      
-      RotorPtr* linkedRotors = new RotorPtr[no_rotors];
-      
-      for(int k = 0; k < no_rotors; k++)
-	{
-	  /*rotors are configured as they appear on command line(check).*/
-	  linkedRotors[k] = new Rotor(argv[argc - 2 - k], 
-				      positions[no_rotors - 1 - k]);
-	}
-      
-      char input_output;
-      int num_io;
-      
-      cout << "Enter in CAPITAL letters "
-	   << "what you would like to have encrytped." << endl
-	   << "Press '.' when you are done." << endl;
-      
-      cin >> input_output;
 
-      while(input_output != '.')
-	{
-	  if(isWhiteSpace(input_output))
-	    {
-	      cout << input_output;
-	      cin >> input_output;
-	      continue;
-	    }
-	  
-	  num_io = letter_to_int(input_output);
+  //Get number of rotors bassed on number of command line arguments.
+  int number_of_rotors(argc - 4 > 0 ? argc - 4 : 0);
+  
 
-	  passThroughEnigma(linkedRotors, no_rotors, pbPtr, rfPtr, num_io);
-	  
-	  cout << int_to_letter(num_io);
-	  
-	  cin >> input_output;
-	}
-      
-      for(int k = 0; k < no_rotors; k++)
-	delete [] linkedRotors[k];
-      
-      delete [] linkedRotors;
-      
+
+  if(!number_of_rotors) //If there are no rotors.
+    {
+      encrypt(pbPtr, rfPtr); //Different encrypt() function for no rotors.
     }
+  else //If there is at least one rotor.
+    {
+      int* positions = new int[number_of_rotors];
+      
+      readPositions(positions, number_of_rotors, argv[argc -1]);
+      
+      //Create as many rotors as we have as arguments.
+      RotorPtr* linkedRotors = new RotorPtr[number_of_rotors];
+      
+      for(int k = 0; k < number_of_rotors; k++)
+	{
+	  //Rotors are configured as they appear on command line.
+	  linkedRotors[k] = new Rotor(argv[argc - 2 - k], 
+				      positions[number_of_rotors - 1 - k]);
+	}
+
+      encrypt(linkedRotors, number_of_rotors, pbPtr, rfPtr);
+
+      //Clean up all the dynamically allocated memory.
+
+      for(int k = 0; k < number_of_rotors; k++)
+	delete [] linkedRotors[k];
+
+      delete [] linkedRotors;
+      delete [] positions;
+    }
+  
   
   delete [] pbPtr;
   delete [] rfPtr;

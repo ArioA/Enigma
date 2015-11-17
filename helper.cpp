@@ -1,10 +1,14 @@
 #include<iostream>
 #include<cmath>
+#include"helper.h"
 
 using namespace std;
 
 //===========================Conversion Functions=======================
 
+typedef Rotor* RotorPtr;
+typedef Plugboard* PlugboardPtr;
+typedef Reflector* ReflectorPtr;
 
 //Precondition: digit is a digit (0, 1, ..., 9).
 //Returns digit as an integer.
@@ -134,4 +138,99 @@ int readNumber(istream& _inflow, char& _digit, char* _filename)
     }
 
   return number;
+}
+
+
+//Precondition: rotorList is a list of initialised Rotor pointers, where
+//rotorList[0] points to the rightmost rotor. 'rotors' in the number of rotors.
+//pb points to an initialised Plugboard. rf points to an initialised
+//reflector, and n is a letter index (0 to 25) to be passed through.
+//Postcondtition: n has been encrypted and all rotors have been 
+//rotated as appropriate.
+void passThroughEnigma(Rotor** rotorList, int rotors,
+  Plugboard* pb, Reflector* rf, int& n)
+{
+  
+  rotorList[0]->rotate();
+
+  for(int k = 0; k < rotors - 2 && rotorList[k]->get_notch(); k++)
+  {
+    rotorList[k+1]->rotate();
+  }
+
+  //  cout << "PB: " << n << " goes to ";
+  pb->passThrough(n);
+  //cout << n << endl;
+
+  for(int k = 0; k < rotors; k++)
+  {
+    //cout << "Rot " << k << ": " << n;
+    rotorList[k]->passThrough_R2L(n);
+    //cout << " goes to " << n << endl;
+  }
+
+  //cout << "RF: " << n  << " goes to ";
+  rf->passThrough(n);
+  //cout << n << endl;
+
+  for(int k = rotors-1; k >= 0; k--)
+  {
+    //cout << "Rot " << k << ": " << n;
+    rotorList[k]->passThrough_L2R(n);
+    //cout << " goes to " << n << endl;
+  }
+
+  //cout << "PB: " << n << " goes to ";
+  pb->passThrough(n);
+  //cout << n << endl;
+}
+
+
+void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
+	     ReflectorPtr rfPtr)
+{
+  char input_output;
+  int num_io;
+  
+  cout << "Enter in CAPITAL letters "
+       << "what you would like to have encrytped." << endl
+       << "Press '.' when you are done." << endl;
+  
+  cin >> input_output;
+  
+  while(input_output != '.')
+    { 
+      num_io = letter_to_int(input_output);
+      
+      passThroughEnigma(linkedRotors, number_of_rotors, pbPtr, rfPtr, num_io);
+      
+      cout << int_to_letter(num_io);
+      
+      cin >> input_output;
+    }
+}
+
+void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr)
+{
+  char input_output;
+  int num_io;
+  
+  cout << "Enter in CAPITAL letters "
+       << "what you would like to have encrytped." << endl
+       << "Press '.' when you are done." << endl;
+  
+  cin >> input_output;
+  
+  while(input_output != '.')
+    { 
+      num_io = letter_to_int(input_output);
+      
+      pbPtr->passThrough(num_io);
+      rfPtr->passThrough(num_io);
+      pbPtr->passThrough(num_io);
+      
+      cout << int_to_letter(num_io);
+      
+      cin >> input_output;
+    }
 }
