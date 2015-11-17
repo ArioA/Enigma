@@ -20,9 +20,9 @@ int main(int argc, char** argv)
       cerr << "Insufficient Number of Parameters Error:" << endl
 	   << "You cannot have " << argc;
       if(argc-1)
-	cout << " parameters." << endl;
+	cerr << " parameters." << endl;
       else
-	cout << " parameter." << endl;
+	cerr << " parameter." << endl;
 
       return 1;
     }
@@ -74,8 +74,6 @@ int main(int argc, char** argv)
   
   delete [] pbPtr;
   delete [] rfPtr;
-  
-  cout << endl << "End of testing." << endl << endl;
-  
+
   return 0;
 }

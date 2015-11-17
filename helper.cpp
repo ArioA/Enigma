@@ -238,10 +238,6 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr)
   char input_output;
   int num_io;
   
-  cout << "Enter in CAPITAL letters "
-       << "what you would like to have encrytped." << endl
-       << "Press Enter when you are done." << endl;
-  
   cin.get(input_output);
   
   while(input_output != '\n')
