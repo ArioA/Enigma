@@ -76,21 +76,23 @@ Reflector::Reflector(char* filename, int& errnum)
 	}
       else
 	{
-	  if(inverse_mapping[index] != -1) //Check if index has been mapped.
+	  if(inverse_mapping[number] != -1) //Check if index has been mapped.
 	  {
-	    cerr << "Invalid mapping of input " << index << " to output "
-		 << number << "(output number is already mapped to from input"
-		 << inverse_mapping[index] << " in reflector file: " 
-		 << filename << ")" << endl;
+	  cerr << "Invalid mapping of input " << index << " to output "
+	       << number << " (output " << number 
+	       << " is already mapped to from input "
+	       << inverse_mapping[number] << " in rotor file: " << filename
+	       << ")" << endl;
 	    errnum = 9;
 	    return;
 	  }
-	  else if(inverse_mapping[number] != -1) //Check if number
+	  else if(inverse_mapping[index] != -1) //Check if number
 	  {                                      //has been mapped.
-	    cerr << "Invalid mapping of input " << number << " to output "
-		 << index << "(output number is already mapped to from input"
-		 << inverse_mapping[number] << " in reflector file: " 
-		 << filename << ")" << endl;
+	  cerr << "Invalid mapping of input " << number << " to output "
+	       << index << " (output " << index 
+	       << " is already mapped to from input "
+	       << inverse_mapping[index] << " in rotor file: " << filename
+	       << ")" << endl;
 	    errnum = 9;
 	    return;
 	  }

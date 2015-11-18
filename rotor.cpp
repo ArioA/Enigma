@@ -47,7 +47,8 @@ Rotor::Rotor(char* filename, int _msalgn, int& errnum): missalignment(_msalgn)
 
       if(number == -1) //Catches readNumber() non-numeric character flag.
 	{
-	  cerr << "Non-numeric character in rotor file " << filename
+	  cerr << "Non-numeric character for mapping in rotor file " 
+	       << filename
 	       << endl;
 	  errnum = 4;
 	  return;
@@ -63,7 +64,8 @@ Rotor::Rotor(char* filename, int _msalgn, int& errnum): missalignment(_msalgn)
       if(inverse_mapping[number] != -1) //Checks if number has already been read.
 	{
 	  cerr << "Invalid mapping of input " << k << " to output "
-	       << number << "(output number is already mapped to from input"
+	       << number << " (output " << number 
+	       << " is already mapped to from input "
 	       << inverse_mapping[number] << " in rotor file: " << filename
 	       << ")" << endl;
 	  errnum = 7;
@@ -101,7 +103,8 @@ Rotor::Rotor(char* filename, int _msalgn, int& errnum): missalignment(_msalgn)
 
       if(number == -1) //Catches readNumber() non-numeric character flag.
 	{
-	  cerr << "Non-numeric character in rotor file " << filename
+	  cerr << "Non-numeric character for mapping in rotor file " 
+	       << filename
 	       << endl;
 	  errnum = 4;
 	  return;
