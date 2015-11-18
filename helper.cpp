@@ -175,9 +175,9 @@ void passThroughEnigma(Rotor** rotorList, int rotors,
   
   rotorList[0]->rotate();
 
-  for(int k = 1; k <= rotors - 1 && rotorList[k]->get_notch(); k++)
+  for(int k = 0; k < rotors - 1 && rotorList[k]->get_notch(); k++)
   {
-    rotorList[k]->rotate();
+    rotorList[k+1]->rotate();
   }
 
   //  cout << "PB: " << n << " goes to ";
