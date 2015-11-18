@@ -175,9 +175,9 @@ void passThroughEnigma(Rotor** rotorList, int rotors,
   
   rotorList[0]->rotate();
 
-  for(int k = 0; k < rotors - 2 && rotorList[k]->get_notch(); k++)
+  for(int k = 1; k <= rotors - 1 && rotorList[k]->get_notch(); k++)
   {
-    rotorList[k+1]->rotate();
+    rotorList[k]->rotate();
   }
 
   //  cout << "PB: " << n << " goes to ";
@@ -221,10 +221,6 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
   char input_output;
   int num_io;
   
-  cout << "Enter in CAPITAL letters "
-       << "what you would like to have encrytped." << endl
-       << "Press Enter when you are done." << endl;
-  
   cin.get(input_output);
   
   while(input_output != '\n')
@@ -232,8 +228,8 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
       if(!isCapital(input_output))
 	{
 	  cerr << input_output << " is not a valid input character (input "
-	       << "characters must be upper case letters" << endl
-	       << "(A-Z)!" << endl;
+	       << "characters must be upper case letters "
+	       << " (A-Z)!" << endl;
 	  errnum = 2;
 	  return;
 	}
@@ -265,8 +261,8 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
       if(!isCapital(input_output))
 	{
 	  cerr << input_output << " is not a valid input character (input "
-	       << "characters must be upper case letters" << endl
-	       << "(A-Z)!" << endl;
+	       << "characters must be upper case letters "
+	       << " (A-Z)!" << endl;
 	  errnum = 2;
 	  return;
 	}
