@@ -225,6 +225,11 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
   
   while(input_output != '\n')
     { 
+      while(isWhiteSpace(input_output))
+	{
+	  cin.get(input_output);
+	}
+
       if(!isCapital(input_output))
 	{
 	  cerr << input_output << " is not a valid input character (input "
@@ -258,6 +263,11 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
   
   while(input_output != '\n')
     { 
+      while(isWhiteSpace(input_output))
+	{
+	  cin.get(input_output);
+	}
+
       if(!isCapital(input_output))
 	{
 	  cerr << input_output << " is not a valid input character (input "

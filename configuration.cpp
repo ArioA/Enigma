@@ -26,12 +26,12 @@ void readPositions(int* a, int length, char* filename, int& errnum)
 
   inflow.get(digit);
   
-  while((!inflow.eof()) && (count <= length))
+  while(!inflow.eof())
     {
       int number(0);
       
       number = readNumber(inflow, digit, filename);
-
+      cout << number << " ";
       if(number == -1) //Catches readNumber() non-numeric character flag.
 	{
 	  cerr << "Non-numeric character in position file " << filename
@@ -50,6 +50,15 @@ void readPositions(int* a, int length, char* filename, int& errnum)
       a[count] = number;
       count++;
 
+      if(count > length)
+	{
+	  cerr << "Position file " << filename 
+	       << " contains too many parameters."
+	       << endl;
+	  errnum = 8;
+	  return;
+	}
+
       while(isWhiteSpace(inflow.peek()))
 	{
 	  inflow.get(digit);
@@ -58,20 +67,11 @@ void readPositions(int* a, int length, char* filename, int& errnum)
       inflow.get(digit);
     }
 
+
   if(count < length)
     {
       cerr << "No starting position for rotor " << count
 	   << " in rotor position file: " << filename << endl;
-      errnum = 8;
-      return;
-    }
-  
-  inflow.get(digit);
-
-  if(!inflow.eof())
-    {
-      cerr << "Position file " << filename << " contains too many parameters."
-	   << endl;
       errnum = 8;
       return;
     }
