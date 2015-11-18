@@ -234,7 +234,7 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
 	{
 	  cerr << input_output << " is not a valid input character (input "
 	       << "characters must be upper case letters "
-	       << " (A-Z)!" << endl;
+	       << "A-Z)!" << endl;
 	  errnum = 2;
 	  return;
 	}
@@ -272,7 +272,7 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
 	{
 	  cerr << input_output << " is not a valid input character (input "
 	       << "characters must be upper case letters "
-	       << " (A-Z)!" << endl;
+	       << "A-Z)!" << endl;
 	  errnum = 2;
 	  return;
 	}

@@ -16,12 +16,8 @@ int main(int argc, char** argv)
   //Catches incorrect number of parameters.
   if(argc <= 2 || argc == 4)
     {
-      cerr << "Insufficient Number of Parameters Error:" << endl
-	   << "You cannot have " << argc;
-      if(argc-1)
-	cerr << " parameters." << endl;
-      else
-	cerr << " parameter." << endl;
+      cerr << "usage: enigma plugboard-file reflector-file "
+	   << "(<rotor-file>* rotor-positions)?" << endl;
 
       return 1;
     }

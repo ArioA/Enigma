@@ -131,7 +131,7 @@ Reflector::Reflector(char* filename, int& errnum)
       }
       else
       {
-	cerr << "Incorrect (odd) number of parameters in reflector file: " 
+	cerr << "Incorrect (odd) number of parameters in reflector file " 
 	     << filename << endl;
 	errnum = 10;
 	  return;

@@ -34,14 +34,14 @@ void readPositions(int* a, int length, char* filename, int& errnum)
 
       if(number == -1) //Catches readNumber() non-numeric character flag.
 	{
-	  cerr << "Non-numeric character in positions file " << filename
+	  cerr << "Non-numeric character in rotor positions file " << filename
 	       << endl;
 	  errnum = 4;
 	  return;
 	}                                //Checks valid input 
       else if(number < 0 || number > 25) //number in .rot file.
 	{
-	  cerr << number << " is an invalid index in position file " 
+	  cerr << number << " is an invalid index in rotor positions file " 
 	       << filename << endl;
 	  errnum = 3;
 	  return;

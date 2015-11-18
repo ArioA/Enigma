@@ -34,16 +34,13 @@ Plugboard::Plugboard(char* filename, int& errnum)
     }
   
   char digit; //character input from .pb file. 
-  int index(0), count(0), occurences[26];
+  int index(0), count(0);
   
   /*
     - index is the buffer in between swapping values.
     - count counts the number of int inputs.
     - occurences counts the number of times a number has been read.
   */
-
-  for(int k = 0; k < 26; k++)
-    occurences[k] = 0;
 
   inflow.get(digit);
   
@@ -81,16 +78,6 @@ Plugboard::Plugboard(char* filename, int& errnum)
 	{
 	  config[index] = number; //Implements plugboard 'switch'.
 	  config[number] = index;
-	}
-
-      occurences[number]++;
-
-      if(occurences[number] > 1) //Checks if number has already been read.
-	{
-	  cerr << "Impossible plugboard configuration - Too many " 
-	       << number << "s in plugboard file " << filename << ".\n";
-	  errnum = 9;
-	  return;
 	}
 
       while(isWhiteSpace(inflow.peek()))
