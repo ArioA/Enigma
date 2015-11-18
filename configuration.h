@@ -3,7 +3,7 @@
 
 #include "rotor.h"
 
-void readPositions(int* a, int length, char* filename);
+void readPositions(int* a, int length, char* filename, int& errnum);
 void configurePosition(Rotor* rot_ptr, int position);
 
 #endif

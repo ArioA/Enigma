@@ -7,23 +7,24 @@
 
 using namespace std;
 
-Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
+Rotor::Rotor(char* filename, int _msalgn, int& errnum): missalignment(_msalgn)
 {
   ifstream inflow;
   inflow.open(filename);
 
   if(!inflow)
     {
-      cerr << "Error: Unable to open file: " << filename << ".\n";
-      exit(11);
+      cerr << "Unable to open rotor file: " << filename << ".\n";
+      errnum = 11;
+      return;
     }
 
   char digit;
-  int occurences[26];
+  int inverse_mapping[26];
 
   for(int k = 0; k < 26; k++)
     {
-      occurences[k] = 0;
+      inverse_mapping[k] = -1;
       notch[k] = false;
     }
 
@@ -35,40 +36,44 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
 
       if(inflow.eof())
 	{
-	  cerr << "Error:" << endl
-	       << "Invalid Rotor Mapping in " << filename 
-	       << " - file contains insufficient"
-	       << "number of parameters." << endl;
+	  cerr << "Invalid rotor mapping in rotor file " << filename
+	       << "inssuficient number of parameters to form a rotor."
+	       << endl;
+	  errnum = 7;
+	  return;
 	}
 
       number = readNumber(inflow, digit, filename);
 
-      if(number == -1)
+      if(number == -1) //Catches readNumber() non-numeric character flag.
 	{
-	  cerr << "Invalid Character..." << endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	  cerr << "Non-numeric character in rotor file " << filename
+	       << endl;
+	  errnum = 4;
+	  return;
+	}                                //Checks valid input number
+      else if(number < 0 || number > 25) // in .rot file.
+	{
+	  cerr << "Invalid index in rotor file " << filename
+	       << ": " << number << " is not a valid index." << endl;
+	  errnum = 3;
+	  return;
 	}
 
-      if(number < 0 || number > 25) //Checks valid input number in .rot file.
+      if(inverse_mapping[number] != -1) //Checks if number has already been read.
 	{
-	  cerr << number << " is an invalid index in file " 
-	       << filename << endl;
-	  exit(3);
+	  cerr << "Invalid mapping of input " << k << " to output "
+	       << number << "(output number is already mapped to from input"
+	       << inverse_mapping[number] << " in rotor file: " << filename
+	       << ")" << endl;
+	  errnum = 7;
+	  return;
 	}
 
+      inverse_mapping[number] = k;
+      
       config[k] = number;
 
-      occurences[number]++;
-
-      if(occurences[number] > 1) //Checks if number has already been read.
-	{
-	  cerr << "Error:" << endl
-	       << "Invalid Rotor Mapping in " << filename 
-	       << "- Too many " << number 
-	       << "s in file " 
-	       << filename << ".\n";
-	  exit(7);
-	}
-      
       while(isWhiteSpace(inflow.peek()))
 	{
 	  inflow.get(digit);
@@ -79,10 +84,11 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
 
   if(validConfig(config)) //Final check.
     {
-      cerr << "Impossible reflector configuration:" << endl
-	   << "Too many/few " << validConfig(config)
+      cerr << "Invalid rotor mapping in rotor file " << filename
+	   << ": too many/few " << validConfig(config)
 	   << "s in this file." << endl;
-      exit(7);
+      errnum = 7;
+      return;
     }
 
 /*========================= Begins to read in notches =====================*/
@@ -93,26 +99,28 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
       
       number = readNumber(inflow, digit, filename);
 
-      if(number == -1)
+      if(number == -1) //Catches readNumber() non-numeric character flag.
 	{
-	  cerr << "Invalid Character..." << endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	}
-      
-      if(number < 0 || number > 25) //Checks valid input number in .rot file.
-	{
-	  cerr << "Error: In " << filename << ": "
-	       << number << " is an invalid index." 
+	  cerr << "Non-numeric character in rotor file " << filename
 	       << endl;
-	  exit(3);
+	  errnum = 4;
+	  return;
+	}                                //Checks valid input number
+      else if(number < 0 || number > 25) //number in .rot file.
+	{
+	  cerr << "Invalid index in rotor file " << filename
+	       << ": " << number << " is not a valid index." << endl;
+	  errnum = 3;
+	  return;
 	}
       
       if(notch[number]) //Check if number hasn't already been read.
 	{
-	  cerr << "Error: Invalid rotor mapping in " << filename << ":" 
-	       << endl 
-	       << "cannot add notch to position " << number 
-	       << "more than once." 
+	  cerr << "Invalid rotor mapping in rotor file " << filename
+	       << "cannot add notch to same position twice."
 	       << endl;
+	  errnum = 7;
+	  return;
 	}
       else
 	notch[number] = true;
@@ -130,12 +138,6 @@ Rotor::Rotor(char* filename, int _msalgn) : missalignment(_msalgn)
 
 void Rotor::passThrough_R2L(int& n)
 {
-  if(n < 0 || n > 25)
-    {
-      cerr << "Error: " << n << " is not between 0 and 25." << endl;
-      exit(3);
-    }
-
   n = ((config[(n + missalignment) % 26] - missalignment) % 26);
 
   if(n < 0)
@@ -144,13 +146,6 @@ void Rotor::passThrough_R2L(int& n)
 
 void Rotor::passThrough_L2R(int& n)
 {
- 
- if(n < 0 || n > 25)
-    {
-      cerr << "Error: " << n << " is not between 0 and 25." << endl;
-      exit(3);
-    }
-
   for(int k = 0; k < 26; k++)
     {
       if(n == ((config[(k + missalignment) % 26] - missalignment) % 26)

@@ -8,7 +8,7 @@ class Reflector
   int config[26];
   
  public:
-  Reflector(char* filename);
+  Reflector(char* filename, int& errnum);
   void passThrough(int& n);
 };
 

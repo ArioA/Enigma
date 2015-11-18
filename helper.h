@@ -17,7 +17,7 @@ int readNumber(std::istream &inflow, char& digit, char* filename);
 void passThroughEnigma(Rotor** rotorList, int rotors,
 		       Plugboard* pb, Reflector* rf, int& n);
 void encrypt(Rotor** linkedRotors, int number_of_rotors, Plugboard* pbPtr,
-	     Reflector* rfPtr);
-void encrypt(Plugboard* pbPtr, Reflector* rfPtr);
+	     Reflector* rfPtr, int& errnum);
+void encrypt(Plugboard* pbPtr, Reflector* rfPtr, int& errnum);
 
 #endif

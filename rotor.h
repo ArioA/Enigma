@@ -9,7 +9,7 @@ class Rotor
   int missalignment;
 
  public:
-  Rotor(char* filename, int malign);
+  Rotor(char* filename, int malign, int& errnum);
   void passThrough_L2R(int& n);
   void passThrough_R2L(int& n);
   void rotate();

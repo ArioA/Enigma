@@ -10,14 +10,15 @@ using namespace std;
 //Precondition: a[] is an array of length 'length'. 
 //Postcondition: a[] is filled with numbers 
 //from the .pos file filename.
-void readPositions(int* a, int length, char* filename)
+void readPositions(int* a, int length, char* filename, int& errnum)
 {
   ifstream inflow(filename);
 
   if(!inflow)
     {
-      cerr << "Error: Unable to open file: " << filename << ".\n";
-      exit(11);
+      cerr << "Unable to open position file " << filename << ".\n";
+      errnum = 11;
+      return;
     }
   
   char digit;
@@ -25,58 +26,54 @@ void readPositions(int* a, int length, char* filename)
 
   inflow.get(digit);
   
-  if(inflow.eof())
-    {
-      cerr << "Error: No rotor starting position - " << endl
-	   << filename << " is empty." << endl;
-      exit(8);
-    }
-  
   while((!inflow.eof()) && (count <= length))
     {
       int number(0);
       
       number = readNumber(inflow, digit, filename);
 
-      if(number == -1)
+      if(number == -1) //Catches readNumber() non-numeric character flag.
 	{
-	  cerr << "Invalid Character..." << endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	}
-
-      if(number < 0 || number > 25) //Checks valid input number in .rot file.
+	  cerr << "Non-numeric character in position file " << filename
+	       << endl;
+	  errnum = 4;
+	  return;
+	}                                //Checks valid input 
+      else if(number < 0 || number > 25) //number in .rot file.
 	{
-	  cerr << number << " is an invalid index in file " 
+	  cerr << number << " is an invalid index in position file " 
 	       << filename << endl;
-	  exit(3);
+	  errnum = 3;
+	  return;
 	}
 
       a[count] = number;
       count++;
 
+      while(isWhiteSpace(inflow.peek()))
+	{
+	  inflow.get(digit);
+	}
+      
       inflow.get(digit);
     }
 
   if(count < length)
     {
-      cerr << "Error: No rotor starting position - " << endl
-	   << filename << " has an insuffcient number of parameters." 
-	   << endl;
-      exit(8);
+      cerr << "No starting position for rotor " << count
+	   << " in rotor position file: " << filename << endl;
+      errnum = 8;
+      return;
     }
   
-  while(isWhiteSpace(inflow.peek()))
-    {
-      inflow.get(digit);
-    }
-
   inflow.get(digit);
 
   if(!inflow.eof())
     {
-      cerr << "Error: No rotor starting position - " << endl
-	   << filename << " contains too many parameters." 
+      cerr << "Position file " << filename << " contains too many parameters."
 	   << endl;
-      exit(8);
+      errnum = 8;
+      return;
     }
 
   inflow.close();

@@ -13,7 +13,6 @@ typedef Rotor* RotorPtr;
 
 int main(int argc, char** argv)
 {
-
   //Catches incorrect number of parameters.
   if(argc <= 2 || argc == 4)
     {
@@ -26,13 +25,45 @@ int main(int argc, char** argv)
 
       return 1;
     }
+
+  int errnum(0);
   
   //Create plugboard.
-  Plugboard* pbPtr = new Plugboard(argv[1]);
+  Plugboard pb(argv[1], errnum);
+
+  switch(errnum)
+    {
+    case 0: break;
+    case 3: return 3;
+    case 4: return 4;
+    case 5: return 5;
+    case 6: return 6;
+    case 11: return 11;
+    default:
+      cerr << "Something went wrong with error tracker." << endl;
+      return 12;
+    }
+
+  Plugboard* pbPtr = &pb;
   
 
   //Create reflector.
-  Reflector* rfPtr = new Reflector(argv[2]);
+  Reflector rf(argv[2], errnum);
+
+  switch(errnum)
+    {
+    case 0: break;
+    case 3: return 3;
+    case 4: return 4;
+    case 9: return 9;
+    case 10: return 10;
+    case 11: return 11;
+    default:
+      cerr << "Something went wrong with error tracker." << endl;
+      return 12;
+    }
+
+  Reflector* rfPtr = &rf;
   
 
   //Get number of rotors bassed on number of command line arguments.
@@ -42,13 +73,36 @@ int main(int argc, char** argv)
 
   if(!number_of_rotors) //If there are no rotors.
     {
-      encrypt(pbPtr, rfPtr); //Different encrypt() function for no rotors.
+      encrypt(pbPtr, rfPtr, errnum); //Different encrypt() function 
+                                     //for no rotors.
+
+      switch(errnum)
+	{
+	case 0: break;
+	case 2: return 2;
+	default: 
+	  cerr << "Something went wrong with error tracker." << endl;
+	  return 12;
+	}
     }
   else //If there is at least one rotor.
     {
       int* positions = new int[number_of_rotors];
       
-      readPositions(positions, number_of_rotors, argv[argc -1]);
+      readPositions(positions, number_of_rotors, argv[argc -1], errnum);
+
+      switch(errnum)
+	{
+	case 0: break;
+	case 1: return 1;
+	case 3: return 3;
+	case 4: return 4;
+	case 8: return 8;
+	case 11: return 11;
+	default:
+	  cerr << "Something went wrong with error tracker." << endl;
+	  return 12;
+	}
       
       //Create as many rotors as we have as arguments.
       RotorPtr* linkedRotors = new RotorPtr[number_of_rotors];
@@ -57,10 +111,33 @@ int main(int argc, char** argv)
 	{
 	  //Rotors are configured as they appear on command line.
 	  linkedRotors[k] = new Rotor(argv[argc - 2 - k], 
-				      positions[number_of_rotors - 1 - k]);
+				      positions[number_of_rotors - 1 - k],
+				      errnum);
+
+	  switch(errnum)
+	    {
+	    case 0: break;
+	    case 3: return 3;
+	    case 4: return 4;
+	    case 7: return 7;
+	    case 8: return 8;
+	    case 11: return 11;
+	    default:
+	      cerr << "Something went wrong with error tracker." << endl;
+	      return 12;
+	    }
 	}
 
-      encrypt(linkedRotors, number_of_rotors, pbPtr, rfPtr);
+      encrypt(linkedRotors, number_of_rotors, pbPtr, rfPtr, errnum);
+
+      switch(errnum)
+	{
+	case 0: break;
+	case 2: return 2;
+	default: 
+	  cerr << "Something went wrong with error tracker." << endl;
+	  return 12;
+	}
 
       //Clean up all the dynamically allocated memory.
 
@@ -70,10 +147,6 @@ int main(int argc, char** argv)
       delete [] linkedRotors;
       delete [] positions;
     }
-  
-  
-  delete [] pbPtr;
-  delete [] rfPtr;
-
+ 
   return 0;
 }

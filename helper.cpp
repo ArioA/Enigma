@@ -68,6 +68,18 @@ bool isLetter(char character)
 return false;
 }
 
+//Precondition: character is an initialised char variable.
+//Returns true if character is a capital letter. False otherwise.
+bool isCapital(char character)
+{
+  if(character >= 'A' && character <= 'Z')
+     {
+       return true;
+     }
+
+return false;
+}
+
 
 /*Precondition: character is an initialised char.
 Postcondition: Returns true if character is either one of a space, tab, 
@@ -134,7 +146,6 @@ int readNumber(istream& _inflow, char& _digit, char* _filename)
       
       if(!isDigit(_digit)) //Non-digit characters are not permited.
 	{
-	  cerr << _filename << " contains a non-numeric character.\n";
 	  return -1;
 	}
       
@@ -205,7 +216,7 @@ standard input (keyboard). Sends encrypted message to the standard output
 (monitor). INVALID_INPUT_CHARACTER error is picked up by passThroughEnigma().
  */
 void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
-	     ReflectorPtr rfPtr)
+	     ReflectorPtr rfPtr, int& errnum)
 {
   char input_output;
   int num_io;
@@ -218,6 +229,15 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
   
   while(input_output != '\n')
     { 
+      if(!isCapital(input_output))
+	{
+	  cerr << input_output << " is not a valid input character (input "
+	       << "characters must be upper case letters" << endl
+	       << "(A-Z)!" << endl;
+	  errnum = 2;
+	  return;
+	}
+
       num_io = letter_to_int(input_output);
       
       passThroughEnigma(linkedRotors, number_of_rotors, pbPtr, rfPtr, num_io);
@@ -233,7 +253,7 @@ rotor respectively.
 Postcondition: Same as above. This is to be used when there are no rotors
 present. INVALID_INPUT_CHARACTER error is picked up by passThrough().
 */
-void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr)
+void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
 {
   char input_output;
   int num_io;
@@ -242,6 +262,15 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr)
   
   while(input_output != '\n')
     { 
+      if(!isCapital(input_output))
+	{
+	  cerr << input_output << " is not a valid input character (input "
+	       << "characters must be upper case letters" << endl
+	       << "(A-Z)!" << endl;
+	  errnum = 2;
+	  return;
+	}
+
       num_io = letter_to_int(input_output);
       
       pbPtr->passThrough(num_io);

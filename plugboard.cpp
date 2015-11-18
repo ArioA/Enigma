@@ -16,15 +16,16 @@ using namespace std;
 
 //Constructor:
 
-Plugboard::Plugboard(char* filename)
+Plugboard::Plugboard(char* filename, int& errnum)
 {  
   ifstream inflow;
   inflow.open(filename);
 
   if(!inflow)
     {
-      cerr << "Error: Unable to open file: " << filename << ".\n";
-      exit(11);
+      cerr << "Unable to open file " << filename << ".\n";
+      errnum = 11;
+      return;
     }
 
   for(int k = 0; k < 26; k++)
@@ -55,20 +56,21 @@ Plugboard::Plugboard(char* filename)
 	- number is the int equivalent of input characters.
       */
 
-      if(isWhiteSpace(digit))  //Next character must be a digit, 
-	{                          //otherwise incorrectly configured file.
-	  cerr << "Impossible plugboard configuration in " << filename
-	       << " - file is not well-formed." << endl;
-	  exit(5);
-	}
-
       number = readNumber(inflow, digit, filename);
 
-      if(number < 0 || number > 25) //Checks valid input number in .pb file.
+      if(number == -1) //Catches readNumber() non-numeric character flag.
+	{
+	  cerr << "Non-numeric character in plugboard file " << filename
+	       << endl;
+	  errnum = 4;
+	  return;
+	}                                //Checks valid input
+      else if(number < 0 || number > 25) //number in .pb file. 
 	{
 	  cerr << number << " is an invalid index in file " 
 	       << filename << endl;
-	  exit(3);
+	  errnum = 3;
+	  return;
 	}
       
       if(count % 2 == 0) //Puts read number into a buffer.
@@ -85,11 +87,10 @@ Plugboard::Plugboard(char* filename)
 
       if(occurences[number] > 1) //Checks if number has already been read.
 	{
-	  cerr << "Error:" << endl
-	       << "Invalid reflector mapping - Too many " << number 
-	       << "s in file " 
-	       << filename << ".\n";
-	  exit(9);
+	  cerr << "Impossible plugboard configuration - Too many " 
+	       << number << "s in plugboard file " << filename << ".\n";
+	  errnum = 9;
+	  return;
 	}
 
       while(isWhiteSpace(inflow.peek()))
@@ -100,22 +101,32 @@ Plugboard::Plugboard(char* filename)
       inflow.get(digit);
       
       count++;
+
+      if(count > 26)
+	{
+	  cerr << "Incorrect number of parameters in plugboard file "
+	       << filename << endl;
+	  errnum = 6;
+	  return;
+	}
     }
   
   if(count % 2 == 1) //Can't have odd number of integers in .pb file.
     {
-      cerr << "Incorrect number of parameters in plugboard file:  " 
+      cerr << "Incorrect number of parameters in plugboard file " 
 	   << filename << endl;
-      exit(6);
+      errnum = 6;
+      return;
     }
   
   
   if(validConfig(config)) //Final check.
     {
-      cerr << "Impossible plugboard configuration:" << endl
-	   << "Too many/few " << validConfig(config)
-	   << "s on this board." << endl;
-      exit(5);
+      cerr << "Impossible plugboard configuration in plugboard file "
+	   << filename << ": too many/few " << validConfig(config)
+	   << "s on this plugboard." << filename << endl;
+      errnum = 5;
+      return;
     }
 
   inflow.close();
@@ -126,14 +137,7 @@ Plugboard::Plugboard(char* filename)
 //Invalid input character error lives here since plugboard is always
 //the first component which input passes through. 
 void Plugboard::passThrough(int& n)
-{
-  if(n < 0 || n > 25)
-    {
-      cerr << "Invalid Input Character Error:" << endl
-	   << "'" << int_to_letter(n) << "' is not a captial letter." << endl;
-      exit(2);
-    }
-  
+{ 
   n = config[n];
   return;
 }

@@ -17,19 +17,20 @@
 
 using namespace std;
 
-Reflector::Reflector(char* filename)
+Reflector::Reflector(char* filename, int& errnum)
 {  
   ifstream inflow;
   inflow.open(filename);
 
   if(!inflow)
     {
-      cerr << "Error: Unable to open file: " << filename << ".\n";
-      exit(11);
+      cerr << "Unable to open reflector file: " << filename << ".\n";
+      errnum = 11;
+      return;
     }
 
   char digit; //character input from .rf file. 
-  int index(0), count(0), occurences[26];
+  int index(0), count(0), inverse_mapping[26];
   
   /*
     - index is the buffer in between swapping values.
@@ -38,7 +39,7 @@ Reflector::Reflector(char* filename)
   */
 
   for(int k = 0; k < 26; k++)
-    occurences[k] = 0;
+    inverse_mapping[k] = -1;
 
   inflow.get(digit);
   
@@ -51,20 +52,22 @@ Reflector::Reflector(char* filename)
 	- number is the int equivalent of input characters.
       */
       
-      if(isWhiteSpace(digit))  //Next character must be a digit, 
-	{                          //otherwise incorrectly configured file.
-	  cerr << "Impossible reflector configuration in " << filename
-	       << " - file is not well-formed." << endl;
-	  exit(5);
-	}
-      
       number = readNumber(inflow, digit, filename);
-      
-      if(number < 0 || number > 25) //Checks valid input number in .rf file.
+
+
+      if(number == -1) //Catches readNumber() non-numeric character flag.
 	{
-	  cerr << number << " is an invalid index in file " 
-	       << filename << endl;
-	  exit(3);
+	  cerr << "Non-numeric character in reflector file " << filename
+	       << endl;
+	  errnum = 4;
+	  return;
+	}                                //Checks valid input 
+      else if(number < 0 || number > 25) //number in .rf file.
+	{
+	  cerr << "Invalid index in reflector file " << filename
+	       << ": " << number << " is not a valid index." << endl;
+	  errnum = 3;
+	  return;
 	}
       
       if(count % 2 == 0) //Puts read number into a buffer.
@@ -73,19 +76,29 @@ Reflector::Reflector(char* filename)
 	}
       else
 	{
-	  config[index] = number; //Implements reflector mapping.
-	  config[number] = index;
-	}
-
-      occurences[number]++;
-
-      if(occurences[number] > 1) //Checks if number has already been read.
-	{
-	  cerr << "Error:" << endl
-	       << "Invalid reflector mapping - Too many " << number 
-	       << "s in file " 
-	       << filename << ".\n";
-	  exit(9);
+	  if(inverse_mapping[index] != -1) //Check if index has been mapped.
+	  {
+	    cerr << "Invalid mapping of input " << index << " to output "
+		 << number << "(output number is already mapped to from input"
+		 << inverse_mapping[index] << " in reflector file: " 
+		 << filename << ")" << endl;
+	    errnum = 9;
+	    return;
+	  }
+	  else if(inverse_mapping[number] != -1) //Check if number
+	  {                                      //has been mapped.
+	    cerr << "Invalid mapping of input " << number << " to output "
+		 << index << "(output number is already mapped to from input"
+		 << inverse_mapping[number] << " in reflector file: " 
+		 << filename << ")" << endl;
+	    errnum = 9;
+	    return;
+	  }
+	  else
+	  {
+	    config[index] = number; //Implements reflector mapping.
+	    config[number] = index;
+	  }
 	}
       
       while(isWhiteSpace(inflow.peek()))
@@ -101,15 +114,28 @@ Reflector::Reflector(char* filename)
 	{
 	  cerr << "Too many parameters in reflector file:  " 
 	       << filename << endl;
-	  exit(10);
+	  errnum = 10;
+	  return;
 	}
     }
 
   if(count < 26) //Checks if enough parameter after having read all numbers.
     {
-      cerr << "Insufficient number of parameters in reflector file:  " 
-	   << filename << endl;
-      exit(10);
+
+      if(count % 2 == 0)
+      {
+	cerr << "Insufficient number of mappings in reflector file:  " 
+	     << filename << endl;
+	errnum = 10;
+	  return;
+      }
+      else
+      {
+	cerr << "Incorrect (odd) number of parameters in reflector file:  " 
+	     << filename << endl;
+	errnum = 10;
+	  return;
+      }
     }
   
   
@@ -126,13 +152,7 @@ Reflector::Reflector(char* filename)
 
 
 void Reflector::passThrough(int& n)
-{
-  if(n < 0 || n > 25)
-    {
-      cerr << "Error in reflector: n must be between 0 and 25.\n";
-      return;
-    }
-  
+{ 
   n = config[n];
   return;
 }
