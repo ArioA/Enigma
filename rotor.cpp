@@ -36,9 +36,7 @@ Rotor::Rotor(char* filename, int _msalgn, int& errnum): missalignment(_msalgn)
 
       if(inflow.eof())
 	{
-	  cerr << "Invalid rotor mapping in rotor file " << filename
-	       << "inssuficient number of parameters to form a rotor."
-	       << endl;
+	  cerr << "Not all inputs mapped in rotor file: " << filename << endl;
 	  errnum = 7;
 	  return;
 	}
@@ -66,8 +64,8 @@ Rotor::Rotor(char* filename, int _msalgn, int& errnum): missalignment(_msalgn)
 	  cerr << "Invalid mapping of input " << k << " to output "
 	       << number << " (output " << number 
 	       << " is already mapped to from input "
-	       << inverse_mapping[number] << " in rotor file: " << filename
-	       << ")" << endl;
+	       << inverse_mapping[number] << ") in rotor file: " << filename
+	       << endl;
 	  errnum = 7;
 	  return;
 	}
