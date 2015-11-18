@@ -82,7 +82,31 @@ int main(int argc, char** argv)
 	}
     }
   else //If there is at least one rotor.
-    {
+    {      
+      //Create as many rotors as we have as arguments.
+      RotorPtr* linkedRotors = new RotorPtr[number_of_rotors];
+      
+      for(int k = 0; k < number_of_rotors; k++)
+	{
+	  //Rotors are configured as they appear on command line.
+	  linkedRotors[k] = new Rotor(argv[argc - 2 - k], 
+				      0,
+				      errnum);
+	  
+	  switch(errnum)
+	    {
+	    case 0: break;
+	    case 3: return 3;
+	    case 4: return 4;
+	    case 7: return 7;
+	    case 8: return 8;
+	    case 11: return 11;
+	    default:
+	      cerr << "Something went wrong with error tracker." << endl;
+	      return 12;
+	    }
+	}
+      
       int* positions = new int[number_of_rotors];
       
       readPositions(positions, number_of_rotors, argv[argc -1], errnum);
@@ -99,29 +123,11 @@ int main(int argc, char** argv)
 	  cerr << "Something went wrong with error tracker." << endl;
 	  return 12;
 	}
-      
-      //Create as many rotors as we have as arguments.
-      RotorPtr* linkedRotors = new RotorPtr[number_of_rotors];
-      
+
       for(int k = 0; k < number_of_rotors; k++)
 	{
-	  //Rotors are configured as they appear on command line.
-	  linkedRotors[k] = new Rotor(argv[argc - 2 - k], 
-				      positions[number_of_rotors - 1 - k],
-				      errnum);
-
-	  switch(errnum)
-	    {
-	    case 0: break;
-	    case 3: return 3;
-	    case 4: return 4;
-	    case 7: return 7;
-	    case 8: return 8;
-	    case 11: return 11;
-	    default:
-	      cerr << "Something went wrong with error tracker." << endl;
-	      return 12;
-	    }
+	  configurePosition(linkedRotors[k],
+			    positions[number_of_rotors - 1 -k]);
 	}
 
       encrypt(linkedRotors, number_of_rotors, pbPtr, rfPtr, errnum);
