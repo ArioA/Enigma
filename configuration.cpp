@@ -31,10 +31,10 @@ void readPositions(int* a, int length, char* filename, int& errnum)
       int number(0);
       
       number = readNumber(inflow, digit, filename);
-      cout << number << " ";
+
       if(number == -1) //Catches readNumber() non-numeric character flag.
 	{
-	  cerr << "Non-numeric character in position file " << filename
+	  cerr << "Non-numeric character in positions file " << filename
 	       << endl;
 	  errnum = 4;
 	  return;

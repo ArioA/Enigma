@@ -124,14 +124,14 @@ Reflector::Reflector(char* filename, int& errnum)
 
       if(count % 2 == 0)
       {
-	cerr << "Insufficient number of mappings in reflector file:  " 
+	cerr << "Insufficient number of mappings in reflector file: " 
 	     << filename << endl;
 	errnum = 10;
 	  return;
       }
       else
       {
-	cerr << "Incorrect (odd) number of parameters in reflector file:  " 
+	cerr << "Incorrect (odd) number of parameters in reflector file: " 
 	     << filename << endl;
 	errnum = 10;
 	  return;
