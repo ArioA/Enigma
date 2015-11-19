@@ -144,10 +144,15 @@ int main(int argc, char** argv)
       //Clean up all the dynamically allocated memory.
 
       for(int k = 0; k < number_of_rotors; k++)
-	delete [] linkedRotors[k];
+	{
+	  delete [] linkedRotors[k];
+	  linkedRotors[k] = NULL;
+	}
 
       delete [] linkedRotors;
+      linkedRotors = NULL;
       delete [] positions;
+      positions = NULL;
     }
  
   return 0;

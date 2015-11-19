@@ -13,7 +13,7 @@ bool isDigit(char digit);
 bool isLetter(char character);
 bool isWhiteSpace(char character);
 int validConfig(int nums[26]);
-int readNumber(std::istream &inflow, char& digit, char* filename);
+int readNumber(std::istream &inflow, char& digit, const char* filename);
 void passThroughEnigma(Rotor** rotorList, int rotors,
 		       Plugboard* pb, Reflector* rf, int& n);
 void encrypt(Rotor** linkedRotors, int number_of_rotors, Plugboard* pbPtr,

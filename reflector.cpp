@@ -17,7 +17,7 @@
 
 using namespace std;
 
-Reflector::Reflector(char* filename, int& errnum)
+Reflector::Reflector(const char* filename, int& errnum)
 {  
   ifstream inflow;
   inflow.open(filename);
@@ -70,37 +70,36 @@ Reflector::Reflector(char* filename, int& errnum)
 	  return;
 	}
       
+      if(inverse_mapping[number] != -1) //Check if index has been mapped.
+	{
+	  cerr << "Invalid mapping of input " << index << " to output "
+	       << number << " (output " << number 
+	       << " is already mapped to from input "
+	       << inverse_mapping[number] << " in reflector file: " << filename
+	       << ")" << endl;
+	  errnum = 9;
+	  return;
+	}
+
       if(count % 2 == 0) //Puts read number into a buffer.
 	{
 	  index = number;
 	}
       else
 	{
-	  if(inverse_mapping[number] != -1) //Check if index has been mapped.
-	  {
-	  cerr << "Invalid mapping of input " << index << " to output "
-	       << number << " (output " << number 
-	       << " is already mapped to from input "
-	       << inverse_mapping[number] << " in rotor file: " << filename
-	       << ")" << endl;
-	    errnum = 9;
-	    return;
-	  }
-	  else if(inverse_mapping[index] != -1) //Check if number
-	  {                                      //has been mapped.
-	  cerr << "Invalid mapping of input " << number << " to output "
-	       << index << " (output " << index 
-	       << " is already mapped to from input "
-	       << inverse_mapping[index] << " in rotor file: " << filename
-	       << ")" << endl;
-	    errnum = 9;
-	    return;
-	  }
-	  else
-	  {
-	    config[index] = number; //Implements reflector mapping.
-	    config[number] = index;
-	  }
+	  if(index == number)
+	    {
+	      cerr << "Invalid mapping of input " << index << " to output "
+		   << number << " (cannot map the same letter to itself)"
+		   << " in reflector file: " << filename <<  endl;
+	      errnum = 9;
+	      return;
+	    }
+
+	  config[index] = number; //Implements reflector mapping.
+	  config[number] = index;
+	  inverse_mapping[number] = index;
+	  inverse_mapping[index] = number;
 	}
       
       while(isWhiteSpace(inflow.peek()))

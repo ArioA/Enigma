@@ -16,7 +16,7 @@ using namespace std;
 
 //Constructor:
 
-Plugboard::Plugboard(char* filename, int& errnum)
+Plugboard::Plugboard(const char* filename, int& errnum)
 {  
   ifstream inflow;
   inflow.open(filename);
@@ -34,13 +34,16 @@ Plugboard::Plugboard(char* filename, int& errnum)
     }
   
   char digit; //character input from .pb file. 
-  int index(0), count(0);
+  int index(0), count(0), inverse_mapping[26];
   
   /*
     - index is the buffer in between swapping values.
     - count counts the number of int inputs.
     - occurences counts the number of times a number has been read.
   */
+
+  for(int k = 0; k < 26; k++)
+    inverse_mapping[k] = k;
 
   inflow.get(digit);
   
@@ -69,15 +72,39 @@ Plugboard::Plugboard(char* filename, int& errnum)
 	  errnum = 3;
 	  return;
 	}
-      
+
+      if(inverse_mapping[number] != number) //Check if index has been mapped.
+	{
+	  cerr << "Impossible plugboard configuration of input " 
+	       << index << " to output "
+	       << number << " (output " << number 
+	       << " is already mapped to from input "
+	       << inverse_mapping[number] << " in plugboard file: " << filename
+	       << ")" << endl;
+	  errnum = 5;
+	  return;
+	}
+
       if(count % 2 == 0) //Puts read number into a buffer.
 	{
 	  index = number;
 	}
       else
 	{
+	  if(index == number)
+	    {
+	      cerr << "Impossible plugboard configuration of input " 
+		   << index << " to output "
+		   << number << " (cannot map the same letter to itself)"
+		   << " in plugboard file: " << filename <<  endl;
+	      errnum = 5;
+	      return;
+	    }
+
 	  config[index] = number; //Implements plugboard 'switch'.
 	  config[number] = index;
+	  inverse_mapping[number] = index;
+	  inverse_mapping[index] = number;
 	}
 
       while(isWhiteSpace(inflow.peek()))

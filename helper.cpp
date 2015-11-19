@@ -132,7 +132,7 @@ character is contained in _filename, then the NON_NUMERIC_CHARACTER error will
 been invoked and this will be caught by the object constructor.
 */
 
-int readNumber(istream& _inflow, char& _digit, char* _filename)
+int readNumber(istream& _inflow, char& _digit, const char* _filename)
 {
   int decimal(0), number(0);
 
@@ -223,7 +223,7 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
   
   cin.get(input_output);
   
-  while(input_output != '\n')
+  while(!cin.eof())
     { 
       while(isWhiteSpace(input_output))
 	{
@@ -261,7 +261,7 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
   
   cin.get(input_output);
   
-  while(input_output != '\n')
+  while(!cin.eof())
     { 
       while(isWhiteSpace(input_output))
 	{

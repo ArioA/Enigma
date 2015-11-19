@@ -5,3 +5,5 @@ configuration.cpp as well. (mostly done)
 reference a int errno parameter and return to the main with errno as
 the error number if an error is encountered.
 - ^Move Invalid Input character from passThrough into encrypt. 
+- change invalid mapping/configuration error messages to be of same
+standard as in rotor.cpp

@@ -7,7 +7,8 @@
 
 using namespace std;
 
-Rotor::Rotor(char* filename, int _msalgn, int& errnum): missalignment(_msalgn)
+Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
+  missalignment(_msalgn)
 {
   ifstream inflow;
   inflow.open(filename);

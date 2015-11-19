@@ -3,14 +3,6 @@
 
 
 
-#plugboard.o: plugboard.cpp helper.cpp plugboard.h
-#	g++ -g -Wall -c plugboard.cpp
-
-#helper.o: helper.cpp helper.h
-#	g++ -g -Wall -c helper.cpp
-
-
-
 OBJ = enigma.o rotor.o reflector.o plugboard.o helper.o configuration.o
 SOR = $(OBJ:.o = .cpp)
 HDR = $(OBJ:.o = .h)
@@ -22,6 +14,10 @@ all: $(SOR) $(HDR) $(EXE)
 $(EXE): $(OBJ)
 	g++ $(CPPFLAGS) $(OBJ) -o $(EXE)
 
-%.o: %.cpp
+%.o: %.cpp %.h
 	g++ $(CPPFLAGS) -c $<
 
+.PHONY: clean
+
+clean:
+	-rm *.o
