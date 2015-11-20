@@ -123,6 +123,17 @@ int validConfig(int nums[26])
   return 0;
 }
 
+int inverseMapping(int* array, int length, int output)
+{
+  for(int k = 0; k < length; k++)
+    {
+      if(array[k] == output)
+	return k;
+    }
+
+  return -1;
+}
+
 //====================================================================
 
 /*Precondition: _inflow is an opened istream and reads from _filename.

@@ -34,7 +34,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
     }
   
   char digit; //character input from .pb file. 
-  int index(0), count(0), inverse_mapping[26];
+  int index(0), count(0) /*,inverse_mapping[26]*/;
   
   /*
     - index is the buffer in between swapping values.
@@ -42,8 +42,8 @@ Plugboard::Plugboard(const char* filename, int& errnum)
     - occurences counts the number of times a number has been read.
   */
 
-  for(int k = 0; k < 26; k++)
-    inverse_mapping[k] = k;
+  /*for(int k = 0; k < 26; k++)
+    inverse_mapping[k] = k;*/
 
   inflow.get(digit);
   
@@ -73,38 +73,50 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	  return;
 	}
 
-      if(inverse_mapping[number] != number) //Check if index has been mapped.
-	{
-	  cerr << "Impossible plugboard configuration of input " 
-	       << index << " to output "
-	       << number << " (output " << number 
-	       << " is already mapped to from input "
-	       << inverse_mapping[number] << " in plugboard file: " << filename
-	       << ")" << endl;
-	  errnum = 5;
-	  return;
-	}
-
       if(count % 2 == 0) //Puts read number into a buffer.
 	{
+	  if(inverseMapping(config, 26, number) != number && count > 0) 
+	    //Check if index has been mapped.
+	    {
+	      cerr << "Impossible plugboard configuration of input " 
+		   << number << " to some other output " 
+		   << "(" << number << " is already mapped to from input "
+		   << inverseMapping(config, 26, number) 
+		   << ") in plugboard file: " << filename << endl;
+	      errnum = 5;
+	      return;
+	    }
+
 	  index = number;
 	}
       else
-	{
+	{ 
 	  if(index == number)
 	    {
 	      cerr << "Impossible plugboard configuration of input " 
-		   << index << " to output "
-		   << number << " (cannot map the same letter to itself)"
+		   << index << " to output " << number 
+		   << " (cannot map the same letter mapped to itself)"
 		   << " in plugboard file: " << filename <<  endl;
+	      errnum = 5;
+	      return;
+	    }
+
+	  if(inverseMapping(config, 26, number) != number) 
+	    //Check if index has been mapped.
+	    {
+	      cerr << "Invalid mapping of input " << index << " to output "
+		   << number << " (output " << number 
+		   << " is already mapped to from input "
+		   << inverseMapping(config, 26, number) 
+		   << ") in plugboard file: " << filename << endl;
 	      errnum = 5;
 	      return;
 	    }
 
 	  config[index] = number; //Implements plugboard 'switch'.
 	  config[number] = index;
-	  inverse_mapping[number] = index;
-	  inverse_mapping[index] = number;
+	  //inverse_mapping[number] = index;
+	  //inverse_mapping[index] = number;
 	}
 
       while(isWhiteSpace(inflow.peek()))

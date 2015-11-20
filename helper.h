@@ -13,6 +13,7 @@ bool isDigit(char digit);
 bool isLetter(char character);
 bool isWhiteSpace(char character);
 int validConfig(int nums[26]);
+int inverseMapping(int* array, int length, int output);
 int readNumber(std::istream &inflow, char& digit, const char* filename);
 void passThroughEnigma(Rotor** rotorList, int rotors,
 		       Plugboard* pb, Reflector* rf, int& n);
