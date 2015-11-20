@@ -96,11 +96,21 @@ int main(int argc, char** argv)
 	  switch(errnum)
 	    {
 	    case 0: break;
-	    case 3: return 3;
-	    case 4: return 4;
-	    case 7: return 7;
-	    case 8: return 8;
-	    case 11: return 11;
+	    case 3: 
+	      deleteRotors(linkedRotors, number_of_rotors);
+	      return 3;
+	    case 4: 
+	      deleteRotors(linkedRotors, number_of_rotors);
+	      return 4;
+	    case 7: 
+	      deleteRotors(linkedRotors, number_of_rotors);
+	      return 7;
+	    case 8: 
+	      deleteRotors(linkedRotors, number_of_rotors);
+	      return 8;
+	    case 11: 
+	      deleteRotors(linkedRotors, number_of_rotors);
+	      return 11;
 	    default:
 	      cerr << "Something went wrong with error tracker." << endl;
 	      return 12;
@@ -114,11 +124,21 @@ int main(int argc, char** argv)
       switch(errnum)
 	{
 	case 0: break;
-	case 1: return 1;
-	case 3: return 3;
-	case 4: return 4;
-	case 8: return 8;
-	case 11: return 11;
+	case 1: 
+	  deleteRotors(linkedRotors, number_of_rotors, positions);
+	  return 1;
+	case 3:
+	  deleteRotors(linkedRotors, number_of_rotors, positions); 
+	  return 3;
+	case 4: 
+	  deleteRotors(linkedRotors, number_of_rotors, positions);
+	  return 4;
+	case 8:
+	  deleteRotors(linkedRotors, number_of_rotors, positions);
+	  return 8;
+	case 11:
+	  deleteRotors(linkedRotors, number_of_rotors, positions);
+	  return 11;
 	default:
 	  cerr << "Something went wrong with error tracker." << endl;
 	  return 12;
@@ -135,7 +155,9 @@ int main(int argc, char** argv)
       switch(errnum)
 	{
 	case 0: break;
-	case 2: return 2;
+	case 2:
+	  deleteRotors(linkedRotors, number_of_rotors, positions);
+	  return 2;
 	default: 
 	  cerr << "Something went wrong with error tracker." << endl;
 	  return 12;
@@ -143,16 +165,7 @@ int main(int argc, char** argv)
 
       //Clean up all the dynamically allocated memory.
 
-      for(int k = 0; k < number_of_rotors; k++)
-	{
-	  delete [] linkedRotors[k];
-	  linkedRotors[k] = NULL;
-	}
-
-      delete [] linkedRotors;
-      linkedRotors = NULL;
-      delete [] positions;
-      positions = NULL;
+      deleteRotors(linkedRotors, number_of_rotors, positions);
     }
  
   return 0;

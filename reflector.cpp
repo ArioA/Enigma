@@ -133,7 +133,9 @@ Reflector::Reflector(const char* filename, int& errnum)
 
   if(count < 26) //Checks if enough parameter after having read all numbers.
     {
-      cerr << "Insufficient number of mappings in reflector file: " 
+      cerr << "Insufficient ";
+      cerr << (count%2 == 0 ? "(even)" : "(odd)");
+      cerr <<" number of mappings in reflector file: " 
 	   << filename << endl;
       errnum = 10;
       return;

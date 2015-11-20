@@ -20,5 +20,7 @@ void passThroughEnigma(Rotor** rotorList, int rotors,
 void encrypt(Rotor** linkedRotors, int number_of_rotors, Plugboard* pbPtr,
 	     Reflector* rfPtr, int& errnum);
 void encrypt(Plugboard* pbPtr, Reflector* rfPtr, int& errnum);
+void deleteRotors(Rotor** rotorsList, int number_of_rotors, int* positions);
+void deleteRotors(Rotor** rotorsList, int number_of_rotors);
 
 #endif

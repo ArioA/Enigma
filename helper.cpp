@@ -308,3 +308,29 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
       cin.get(input_output);
     }
 }
+
+void deleteRotors(RotorPtr* rotorsList, int number_of_rotors, int* positions)
+{
+  for(int k = 0; k < number_of_rotors; k++)
+    {
+      delete [] rotorsList[k];
+      rotorsList[k] = NULL;
+    }
+  
+  delete [] rotorsList;
+  rotorsList = NULL;
+  delete [] positions;
+  positions = NULL;
+}
+
+void deleteRotors(RotorPtr* rotorsList, int number_of_rotors)
+{
+  for(int k = 0; k < number_of_rotors; k++)
+    {
+      delete [] rotorsList[k];
+      rotorsList[k] = NULL;
+    }
+  
+  delete [] rotorsList;
+  rotorsList = NULL;
+}
