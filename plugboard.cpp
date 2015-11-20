@@ -49,6 +49,15 @@ Plugboard::Plugboard(const char* filename, int& errnum)
   
   while(!inflow.eof())
     {
+
+      if(count > 25)
+	{
+	  cerr << "Incorrect (too many) number of parameters"
+	       <<" in plugboard file "
+	       << filename << endl;
+	  errnum = 6;
+	  return;
+	}
       
       int number;
       /*
@@ -126,14 +135,6 @@ Plugboard::Plugboard(const char* filename, int& errnum)
       inflow.get(digit);
       
       count++;
-
-      if(count > 25)
-	{
-	  cerr << "Incorrect number of parameters in plugboard file "
-	       << filename << endl;
-	  errnum = 6;
-	  return;
-	}
     }
   
   if(count % 2 == 1) //Can't have odd number of integers in .pb file.
