@@ -22,9 +22,13 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
 
   //Default 'empty' setup:
   for(int k = 0; k < 26; k++)
-    config[k] = -1;
+    {
+      config[k] = -1;
+      notch[k] = false;
+    }
 
   char digit;
+  int notchCount(0);
 
   inflow.get(digit);
 
@@ -92,6 +96,15 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
   
   while(!inflow.eof())
     {
+
+      if(notchCount > 25)
+	{
+	  cerr << "Invalid rotor mapping in rotor file " << filename
+	       << " too many inputs for notches." << endl;
+	  errnum = 7;
+	  return;
+	}
+      
       int number(0);
       
       number = readNumber(inflow, digit, filename);
@@ -115,13 +128,15 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
       if(notch[number]) //Check if number hasn't already been read.
 	{
 	  cerr << "Invalid rotor mapping in rotor file " << filename
-	       << "cannot add notch to same position twice."
+	       << " cannot add notch to same position twice."
 	       << endl;
 	  errnum = 7;
 	  return;
 	}
       else
 	notch[number] = true;
+
+      notchCount++;
 
       while(isWhiteSpace(inflow.peek()))
 	{

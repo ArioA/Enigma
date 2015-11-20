@@ -28,6 +28,16 @@ void readPositions(int* a, int length, const char* filename, int& errnum)
   
   while(!inflow.eof())
     {
+
+      if(count > length-1)
+	{
+	  cerr << "Position file " << filename 
+	       << " contains too many parameters."
+	       << endl;
+	  errnum = 8;
+	  return;
+	}
+
       int number(0);
       
       number = readNumber(inflow, digit, filename);
@@ -49,15 +59,6 @@ void readPositions(int* a, int length, const char* filename, int& errnum)
 
       a[count] = number;
       count++;
-
-      if(count > length)
-	{
-	  cerr << "Position file " << filename 
-	       << " contains too many parameters."
-	       << endl;
-	  errnum = 8;
-	  return;
-	}
 
       while(isWhiteSpace(inflow.peek()))
 	{

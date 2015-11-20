@@ -166,8 +166,9 @@ int readNumber(istream& _inflow, char& _digit, const char* _filename)
       number += digit_to_int(_digit);
       
       _inflow.get(_digit);
-      
-      decimal++;      
+
+      if(decimal == 0)
+	decimal++;      
     }
 
   return number;
@@ -243,7 +244,8 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
 
       if(!isCapital(input_output))
 	{
-	  cerr << input_output << " is not a valid input character (input "
+	  cerr << endl << input_output 
+	       << " is not a valid input character (input "
 	       << "characters must be upper case letters "
 	       << "A-Z)!" << endl;
 	  errnum = 2;
@@ -281,7 +283,8 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
 
       if(!isCapital(input_output))
 	{
-	  cerr << input_output << " is not a valid input character (input "
+	  cerr << endl << input_output 
+	       << " is not a valid input character (input "
 	       << "characters must be upper case letters "
 	       << "A-Z)!" << endl;
 	  errnum = 2;

@@ -46,6 +46,14 @@ Reflector::Reflector(const char* filename, int& errnum)
   
   while(!inflow.eof())
     {
+
+      if(count > 25) //Catches excessive number of parameter in .rf file.
+	{
+	  cerr << "Too many parameters in reflector file:  " 
+	       << filename << endl;
+	  errnum = 10;
+	  return;
+	}
       
       int number(0);
       /*
@@ -121,33 +129,14 @@ Reflector::Reflector(const char* filename, int& errnum)
       inflow.get(digit);
 
       count++;
-
-      if(count > 26) //Catches excessive number of parameter in .rf file.
-	{
-	  cerr << "Too many parameters in reflector file:  " 
-	       << filename << endl;
-	  errnum = 10;
-	  return;
-	}
     }
 
   if(count < 26) //Checks if enough parameter after having read all numbers.
     {
-
-      if(count % 2 == 0)
-      {
-	cerr << "Insufficient number of mappings in reflector file: " 
-	     << filename << endl;
-	errnum = 10;
-	  return;
-      }
-      else
-      {
-	cerr << "Incorrect (odd) number of parameters in reflector file " 
-	     << filename << endl;
-	errnum = 10;
-	  return;
-      }
+      cerr << "Insufficient number of mappings in reflector file: " 
+	   << filename << endl;
+      errnum = 10;
+      return;
     }
   
   

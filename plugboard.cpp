@@ -23,7 +23,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 
   if(!inflow)
     {
-      cerr << "Unable to open file " << filename << ".\n";
+      cerr << "Unable to open plugboard file " << filename << ".\n";
       errnum = 11;
       return;
     }
@@ -67,7 +67,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	}                                //Checks valid input
       else if(number < 0 || number > 25) //number in .pb file. 
 	{
-	  cerr << number << " is an invalid index in file " 
+	  cerr << number << " is an invalid index in plugboard file " 
 	       << filename << endl;
 	  errnum = 3;
 	  return;
@@ -116,8 +116,6 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 
 	  config[index] = number; //Implements plugboard 'switch'.
 	  config[number] = index;
-	  //inverse_mapping[number] = index;
-	  //inverse_mapping[index] = number;
 	}
 
       while(isWhiteSpace(inflow.peek()))
@@ -129,7 +127,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
       
       count++;
 
-      if(count > 26)
+      if(count > 25)
 	{
 	  cerr << "Incorrect number of parameters in plugboard file "
 	       << filename << endl;
@@ -140,7 +138,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
   
   if(count % 2 == 1) //Can't have odd number of integers in .pb file.
     {
-      cerr << "Incorrect number of parameters in plugboard file " 
+      cerr << "Incorrect (odd) number of parameters in plugboard file " 
 	   << filename << endl;
       errnum = 6;
       return;
