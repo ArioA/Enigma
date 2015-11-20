@@ -240,6 +240,9 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
       while(isWhiteSpace(input_output))
 	{
 	  cin.get(input_output);
+	  
+	  if(cin.eof())
+	    return;
 	}
 
       if(!isCapital(input_output))
@@ -279,6 +282,9 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
       while(isWhiteSpace(input_output))
 	{
 	  cin.get(input_output);
+
+	  if(cin.eof())
+	    return;
 	}
 
       if(!isCapital(input_output))
