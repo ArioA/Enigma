@@ -20,18 +20,15 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
       return;
     }
 
-  char digit;
-  int inverse_mapping[26];
-
+  //Default 'empty' setup:
   for(int k = 0; k < 26; k++)
-    {
-      inverse_mapping[k] = -1;
-      notch[k] = false;
-    }
+    config[k] = -1;
+
+  char digit;
 
   inflow.get(digit);
 
-  for(int k = 0; k < 26; k++)
+  for(int count = 0; count < 26; count++)
     {
      int  number(0);
 
@@ -60,20 +57,19 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
 	  return;
 	}
 
-      if(inverse_mapping[number] != -1) //Checks if number has already been read.
+      else if(inverseMapping(config, 26, number) != -1 && count > 0) 
+	//Check if index has been mapped.
 	{
-	  cerr << "Invalid mapping of input " << k << " to output "
+	  cerr << "Invalid mapping of input " << count << " to output "
 	       << number << " (output " << number 
 	       << " is already mapped to from input "
-	       << inverse_mapping[number] << ") in rotor file: " << filename
-	       << endl;
+	       << inverseMapping(config, 26, number) 
+	       << ") in rotor file: " << filename << endl;
 	  errnum = 7;
 	  return;
 	}
-
-      inverse_mapping[number] = k;
       
-      config[k] = number;
+      config[count] = number;
 
       while(isWhiteSpace(inflow.peek()))
 	{

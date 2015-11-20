@@ -29,6 +29,7 @@ Reflector::Reflector(const char* filename, int& errnum)
       return;
     }
 
+  //Default 'empty' setup:
   for(int k = 0; k < 26; k++)
     config[k] = -1;
 
