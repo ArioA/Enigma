@@ -104,7 +104,8 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	  if(inverseMapping(config, 26, number) != number) 
 	    //Check if index has been mapped.
 	    {
-	      cerr << "Invalid mapping of input " << index << " to output "
+	      cerr << "Impossible plugboard configuration  of input " 
+		   << index << " to output "
 		   << number << " (output " << number 
 		   << " is already mapped to from input "
 		   << inverseMapping(config, 26, number) 

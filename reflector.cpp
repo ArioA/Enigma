@@ -29,17 +29,17 @@ Reflector::Reflector(const char* filename, int& errnum)
       return;
     }
 
+  for(int k = 0; k < 26; k++)
+    config[k] = -1;
+
   char digit; //character input from .rf file. 
-  int index(0), count(0), inverse_mapping[26];
+  int index(0), count(0);
   
   /*
     - index is the buffer in between swapping values.
     - count counts the number of int inputs.
     - occurences counts the number of times a number has been read.
   */
-
-  for(int k = 0; k < 26; k++)
-    inverse_mapping[k] = -1;
 
   inflow.get(digit);
   
@@ -69,21 +69,22 @@ Reflector::Reflector(const char* filename, int& errnum)
 	  errnum = 3;
 	  return;
 	}
-      
-      if(inverse_mapping[number] != -1) //Check if index has been mapped.
-	{
-	  cerr << "Invalid mapping of input " << index << " to output "
-	       << number << " (output " << number 
-	       << " is already mapped to from input "
-	       << inverse_mapping[number] << " in reflector file: " << filename
-	       << ")" << endl;
-	  errnum = 9;
-	  return;
-	}
 
       if(count % 2 == 0) //Puts read number into a buffer.
 	{
-	  index = number;
+	  if(inverseMapping(config, 26, number) != -1 && count > 0) 
+	    //Check if index has been mapped.
+	    {
+	      cerr << "Invalid mapping of input " 
+		   << number << " to some other output " 
+		   << "(" << number << " is already mapped to from input "
+		   << inverseMapping(config, 26, number) 
+		   << ") in reflector file: " << filename << endl;
+	      errnum = 9;
+	      return;
+	    }
+	  
+	      index = number;
 	}
       else
 	{
@@ -95,11 +96,20 @@ Reflector::Reflector(const char* filename, int& errnum)
 	      errnum = 9;
 	      return;
 	    }
+	  else if(inverseMapping(config, 26, number) != -1) 
+	    //Check if index has been mapped.
+	    {
+	      cerr << "Invalid mapping of input " << index << " to output "
+		   << number << " (output " << number 
+		   << " is already mapped to from input "
+		   << inverseMapping(config, 26, number) 
+		   << ") in reflector file: " << filename << endl;
+	      errnum = 9;
+	      return;
+	    }
 
 	  config[index] = number; //Implements reflector mapping.
 	  config[number] = index;
-	  inverse_mapping[number] = index;
-	  inverse_mapping[index] = number;
 	}
       
       while(isWhiteSpace(inflow.peek()))
