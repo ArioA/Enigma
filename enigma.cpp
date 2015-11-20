@@ -6,6 +6,7 @@
 #include "reflector.h"
 #include "helper.h"
 #include "configuration.h"
+#include "errors.h"
 
 using namespace std;
 
@@ -19,7 +20,7 @@ int main(int argc, char** argv)
       cerr << "usage: enigma plugboard-file reflector-file "
 	   << "(<rotor-file>* rotor-positions)?" << endl;
 
-      return 1;
+      return INSUFFICIENT_NUMBER_OF_PARAMETERS;
     }
 
   int errnum(0);
@@ -30,11 +31,11 @@ int main(int argc, char** argv)
   switch(errnum)
     {
     case 0: break;
-    case 3: return 3;
-    case 4: return 4;
-    case 5: return 5;
-    case 6: return 6;
-    case 11: return 11;
+    case 3: return INVALID_INDEX;
+    case 4: return NON_NUMERIC_CHARACTER;
+    case 5: return IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
+    case 6: return INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
+    case 11: return ERROR_OPENING_CONFIGURATION_FILE;
     default:
       cerr << "Something went wrong with error tracker." << endl;
       return 12;
@@ -49,11 +50,11 @@ int main(int argc, char** argv)
   switch(errnum)
     {
     case 0: break;
-    case 3: return 3;
-    case 4: return 4;
-    case 9: return 9;
-    case 10: return 10;
-    case 11: return 11;
+    case 3: return INVALID_INDEX;
+    case 4: return NON_NUMERIC_CHARACTER;
+    case 9: return INVALID_REFLECTOR_MAPPING;
+    case 10: return INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
+    case 11: return ERROR_OPENING_CONFIGURATION_FILE;
     default:
       cerr << "Something went wrong with error tracker." << endl;
       return 12;
@@ -75,7 +76,7 @@ int main(int argc, char** argv)
       switch(errnum)
 	{
 	case 0: break;
-	case 2: return 2;
+	case 2: return INVALID_INPUT_CHARACTER;
 	default: 
 	  cerr << "Something went wrong with error tracker." << endl;
 	  return 12;
@@ -98,19 +99,19 @@ int main(int argc, char** argv)
 	    case 0: break;
 	    case 3: 
 	      deleteRotors(linkedRotors, number_of_rotors);
-	      return 3;
+	      return INVALID_INDEX;
 	    case 4: 
 	      deleteRotors(linkedRotors, number_of_rotors);
-	      return 4;
+	      return NON_NUMERIC_CHARACTER;
 	    case 7: 
 	      deleteRotors(linkedRotors, number_of_rotors);
-	      return 7;
+	      return INVALID_ROTOR_MAPPING;
 	    case 8: 
 	      deleteRotors(linkedRotors, number_of_rotors);
-	      return 8;
+	      return NO_ROTOR_STARTING_POSITION;
 	    case 11: 
 	      deleteRotors(linkedRotors, number_of_rotors);
-	      return 11;
+	      return ERROR_OPENING_CONFIGURATION_FILE;
 	    default:
 	      cerr << "Something went wrong with error tracker." << endl;
 	      return 12;
@@ -126,19 +127,19 @@ int main(int argc, char** argv)
 	case 0: break;
 	case 1: 
 	  deleteRotors(linkedRotors, number_of_rotors, positions);
-	  return 1;
+	  return INSUFFICIENT_NUMBER_OF_PARAMETERS;
 	case 3:
 	  deleteRotors(linkedRotors, number_of_rotors, positions); 
-	  return 3;
+	  return INVALID_INDEX;
 	case 4: 
 	  deleteRotors(linkedRotors, number_of_rotors, positions);
-	  return 4;
+	  return NON_NUMERIC_CHARACTER;
 	case 8:
 	  deleteRotors(linkedRotors, number_of_rotors, positions);
-	  return 8;
+	  return NO_ROTOR_STARTING_POSITION;
 	case 11:
 	  deleteRotors(linkedRotors, number_of_rotors, positions);
-	  return 11;
+	  return ERROR_OPENING_CONFIGURATION_FILE;
 	default:
 	  cerr << "Something went wrong with error tracker." << endl;
 	  return 12;
@@ -157,7 +158,7 @@ int main(int argc, char** argv)
 	case 0: break;
 	case 2:
 	  deleteRotors(linkedRotors, number_of_rotors, positions);
-	  return 2;
+	  return INVALID_INPUT_CHARACTER;
 	default: 
 	  cerr << "Something went wrong with error tracker." << endl;
 	  return 12;
