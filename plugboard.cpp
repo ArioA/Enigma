@@ -7,12 +7,10 @@ to swap values of input/output.*/
 
 #include<iostream>
 #include<fstream>
-#include"plugboard.h"
-#include"helper.h"
+#include"helper.h" //plugboard.h found in here.
 
 using namespace std;
 
-//Constructor for Plugboard class.
 Plugboard::Plugboard(const char* filename, int& errnum)
 {  
   ifstream inflow;
@@ -151,10 +149,6 @@ Plugboard::Plugboard(const char* filename, int& errnum)
   inflow.close();
 }
 
-//Precondition: n is an integer between 0 and 25.
-//Postcondition: Simulates the (n+1)th letter passing through the plugboard.
-//Invalid input character error lives here since plugboard is always
-//the first component which input passes through. 
 void Plugboard::passThrough(int& n)
 { 
   n = config[n];

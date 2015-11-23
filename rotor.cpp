@@ -1,11 +1,9 @@
 #include<iostream>
 #include<fstream>
-#include"rotor.h"
-#include"helper.h"
+#include"helper.h" //rotor.h found in here.
 
 using namespace std;
 
-//Constructor for Rotor.
 Rotor::Rotor(const char* filename, const int& _msalgn, int& errnum):
   missalignment(_msalgn)
 {
@@ -163,9 +161,7 @@ Rotor::Rotor(const char* filename, const int& _msalgn, int& errnum):
   inflow.close();
 }
 
-//Preconditioin: n is an initiallised integer between 0 and 25.
-//Postcondition: simulates input passing through rotor from right to left
-//whilst taking into account any rotations via missalignment.
+
 void Rotor::passThrough_R2L(int& n)
 {
   n = ((config[(n + missalignment) % 26] - missalignment) % 26);
@@ -174,10 +170,7 @@ void Rotor::passThrough_R2L(int& n)
     n += 26; 
 }
 
-//Preconditioin: Rotor object has been constructed and n is an initiallised
-//integer between 0 and 25.
-//Postcondition: simulates input passing through rotor from left to right
-//whilst taking into account any rotations via missalignment.
+
 void Rotor::passThrough_L2R(int& n)
 {
   for(int k = 0; k < 26; k++)
@@ -191,25 +184,12 @@ void Rotor::passThrough_L2R(int& n)
     }
 }
 
-//Precondition: Rotor object has been constructed.
-//Postcondition: simulates rotation of Rotor object. 
 void Rotor::rotate()
 {
   missalignment = (missalignment + 1) % 26;
 }
 
-//Precondition: Rotor object has been constructed.
-//Postcondition: returns value of notch at 'A' position.
 bool Rotor::get_notch()
 {
   return notch[missalignment];
-}
-
-
-void Rotor::print_config()
-{
-  for(int k = 0; k <26; k++)
-    cout << config[k] << " ";
-
-  cout << endl;
 }

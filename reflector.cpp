@@ -4,12 +4,10 @@
 
 #include<fstream>
 #include<iostream>
-#include"reflector.h"
-#include"helper.h"
+#include"helper.h" //reflector.h found in here.
 
 using namespace std;
 
-//Constructor for Reflector class.
 Reflector::Reflector(const char* filename, int& errnum)
 {  
   ifstream inflow;
@@ -148,10 +146,6 @@ Reflector::Reflector(const char* filename, int& errnum)
   inflow.close();
 }
 
-//Precondition: Reflector object has been successfully constructed. Also,
-//n is an initiallised integer between 0 and 25.
-//Postcondition: Simulates effect of reflecting (n+1)th letter in the alphabet
-//in reflector object.
 void Reflector::passThrough(int& n)
 { 
   n = config[n];
