@@ -1,8 +1,6 @@
 #include<iostream>
-#include<cstdlib>
 #include<fstream>
 #include"rotor.h"
-#include"errors.h"
 #include"helper.h"
 
 using namespace std;

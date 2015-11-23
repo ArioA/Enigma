@@ -123,6 +123,11 @@ int validConfig(int nums[26])
   return 0;
 }
 
+/*Precondition: array is an array of size length which has been initiallised,
+output is an initiallised integer.
+Postcondition: if output is not in array, returns -1. Otherwise, returns the
+index of array which output appears in.
+*/
 int inverseMapping(int* array, int length, int output)
 {
   for(int k = 0; k < length; k++)
@@ -313,7 +318,7 @@ void deleteRotors(RotorPtr* rotorsList, int number_of_rotors, int* positions)
 {
   for(int k = 0; k < number_of_rotors; k++)
     {
-      delete [] rotorsList[k];
+      delete rotorsList[k];
       rotorsList[k] = NULL;
     }
   
@@ -327,7 +332,7 @@ void deleteRotors(RotorPtr* rotorsList, int number_of_rotors)
 {
   for(int k = 0; k < number_of_rotors; k++)
     {
-      delete [] rotorsList[k];
+      delete rotorsList[k];
       rotorsList[k] = NULL;
     }
   

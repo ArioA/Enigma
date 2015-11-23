@@ -1,9 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include "helper.h"
 #include "configuration.h"
-#include "errors.h"
 
 using namespace std;
 

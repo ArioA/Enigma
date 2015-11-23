@@ -28,6 +28,7 @@ int main(int argc, char** argv)
   //Create plugboard.
   Plugboard pb(argv[1], errnum);
 
+  //Checks if plugboard was configured correctly.
   switch(errnum)
     {
     case 0: break;
@@ -47,6 +48,7 @@ int main(int argc, char** argv)
   //Create reflector.
   Reflector rf(argv[2], errnum);
 
+  //Checks if reflector was configured correctly.
   switch(errnum)
     {
     case 0: break;
@@ -73,6 +75,7 @@ int main(int argc, char** argv)
       encrypt(pbPtr, rfPtr, errnum); //Different encrypt() function 
                                      //for no rotors.
 
+      //Checks if standard input stream input was valid.
       switch(errnum)
 	{
 	case 0: break;
@@ -94,34 +97,38 @@ int main(int argc, char** argv)
 				      0,
 				      errnum);
 	  
+	  //Checks if linkedRotors[k] was successfully constructed,
+	  //and delete as many rotors as have been created if not.
 	  switch(errnum)
 	    {
 	    case 0: break;
 	    case 3: 
-	      deleteRotors(linkedRotors, number_of_rotors);
+	      deleteRotors(linkedRotors, k+1);
 	      return INVALID_INDEX;
 	    case 4: 
-	      deleteRotors(linkedRotors, number_of_rotors);
+	      deleteRotors(linkedRotors, k+1);
 	      return NON_NUMERIC_CHARACTER;
 	    case 7: 
-	      deleteRotors(linkedRotors, number_of_rotors);
+	      deleteRotors(linkedRotors, k+1);
 	      return INVALID_ROTOR_MAPPING;
 	    case 8: 
-	      deleteRotors(linkedRotors, number_of_rotors);
+	      deleteRotors(linkedRotors, k+1);
 	      return NO_ROTOR_STARTING_POSITION;
 	    case 11: 
-	      deleteRotors(linkedRotors, number_of_rotors);
+	      deleteRotors(linkedRotors, k+1);
 	      return ERROR_OPENING_CONFIGURATION_FILE;
 	    default:
 	      cerr << "Something went wrong with error tracker." << endl;
+	      deleteRotors(linkedRotors, k+1);
 	      return 12;
 	    }
 	}
-      
+      //Create an array in which to store rotor positions.
       int* positions = new int[number_of_rotors];
       
       readPositions(positions, number_of_rotors, argv[argc -1], errnum);
 
+      //Checks if positions were read and entered correctly.
       switch(errnum)
 	{
 	case 0: break;
@@ -142,15 +149,18 @@ int main(int argc, char** argv)
 	  return ERROR_OPENING_CONFIGURATION_FILE;
 	default:
 	  cerr << "Something went wrong with error tracker." << endl;
+	  deleteRotors(linkedRotors, number_of_rotors, positions);
 	  return 12;
 	}
 
+	//Implement read-in starting positions of rotors.
       for(int k = 0; k < number_of_rotors; k++)
 	{
 	  configurePosition(linkedRotors[k],
 			    positions[number_of_rotors - 1 -k]);
 	}
 
+	//Begins 
       encrypt(linkedRotors, number_of_rotors, pbPtr, rfPtr, errnum);
 
       switch(errnum)
@@ -161,6 +171,7 @@ int main(int argc, char** argv)
 	  return INVALID_INPUT_CHARACTER;
 	default: 
 	  cerr << "Something went wrong with error tracker." << endl;
+	  deleteRotors(linkedRotors, number_of_rotors, positions);
 	  return 12;
 	}
 

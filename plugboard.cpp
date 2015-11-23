@@ -5,12 +5,10 @@ to swap values of input/output.*/
 //asa215@ic.ac.uk
 //09/11/2015
 
-#include<cstdlib>
 #include<iostream>
 #include<fstream>
 #include"plugboard.h"
 #include"helper.h"
-#include"errors.h"
 
 using namespace std;
 

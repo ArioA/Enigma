@@ -9,10 +9,8 @@
 */
 
 #include<fstream>
-#include<cstdlib>
 #include<iostream>
 #include"reflector.h"
-#include"errors.h"
 #include"helper.h"
 
 using namespace std;
