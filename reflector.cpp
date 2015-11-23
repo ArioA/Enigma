@@ -42,7 +42,8 @@ Reflector::Reflector(const char* filename, int& errnum)
 
       if(count > 25) //Catches excessive number of parameter in .rf file.
 	{
-	  cerr << "Too many parameters in reflector file:  " 
+	  cerr << "Incorrect (too many) number of parameters parameters "
+	       << "in reflector file:  " 
 	       << filename << endl;
 	  errnum = 10;
 	  return;
