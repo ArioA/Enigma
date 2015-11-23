@@ -19,6 +19,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
   ifstream inflow;
   inflow.open(filename);
 
+  //Check if able to open plugboard file.
   if(!inflow)
     {
       cerr << "Unable to open plugboard file " << filename << ".\n";
@@ -37,17 +38,14 @@ Plugboard::Plugboard(const char* filename, int& errnum)
   /*
     - index is the buffer in between swapping values.
     - count counts the number of int inputs.
-    - occurences counts the number of times a number has been read.
   */
-
-  /*for(int k = 0; k < 26; k++)
-    inverse_mapping[k] = k;*/
 
   inflow.get(digit);
   
+  //Begin reading in plugboard file.
   while(!inflow.eof())
     {
-
+   		//Check if too many numbers have been read in.
       if(count > 25)
 	{
 	  cerr << "Incorrect (too many) number of parameters"
@@ -57,11 +55,8 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	  return;
 	}
       
+      //number is the integers read in.
       int number;
-      /*
-	- decimal counts what power of 10 the input char is.
-	- number is the int equivalent of input characters.
-      */
 
       number = readNumber(inflow, digit, filename);
 
@@ -82,8 +77,8 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 
       if(count % 2 == 0) //Puts read number into a buffer.
 	{
-	  if(inverseMapping(config, 26, number) != number && count > 0) 
 	    //Check if index has been mapped.
+	  if(inverseMapping(config, 26, number) != number && count > 0) 
 	    {
 	      cerr << "Impossible plugboard configuration of input " 
 		   << number << " to some other output " 
@@ -98,7 +93,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	}
       else
 	{ 
-	  if(index == number)
+	  if(index == number) //Checks if number has just been read in.
 	    {
 	      cerr << "Impossible plugboard configuration of input " 
 		   << index << " to output " << number 
@@ -107,9 +102,8 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	      errnum = 5;
 	      return;
 	    }
-
+	    //Check if number has been mapped.
 	  if(inverseMapping(config, 26, number) != number) 
-	    //Check if index has been mapped.
 	    {
 	      cerr << "Impossible plugboard configuration  of input " 
 		   << index << " to output "
@@ -125,6 +119,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	  config[number] = index;
 	}
 
+		//Skips any whitespace characters in plugboard file.
       while(isWhiteSpace(inflow.peek()))
 	{
 	  inflow.get(digit);
