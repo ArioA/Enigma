@@ -1,10 +1,6 @@
 #include <iostream>
-#include <cstdlib>
 #include <fstream>
-#include "rotor.h"
-#include "plugboard.h"
-#include "reflector.h"
-#include "helper.h"
+#include "helper.h" //rotor.h, reflector.h and plugboard.h are all in here.
 #include "configuration.h"
 #include "errors.h"
 

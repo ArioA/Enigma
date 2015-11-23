@@ -2,12 +2,6 @@
 //asa215@ic.ac.uk
 //10/11/2015
 
-/*TO DO:
-- .rf file should contain 26 numbers -> if(count != 26)...
-- INVALID_INDEX
-- NON-NUMERIC_CHAR
-*/
-
 #include<fstream>
 #include<iostream>
 #include"reflector.h"
@@ -15,11 +9,13 @@
 
 using namespace std;
 
+//Constructor for Reflector class.
 Reflector::Reflector(const char* filename, int& errnum)
 {  
   ifstream inflow;
   inflow.open(filename);
 
+  //Checks if file reflector file could be opened.
   if(!inflow)
     {
       cerr << "Unable to open reflector file: " << filename << ".\n";
@@ -31,14 +27,15 @@ Reflector::Reflector(const char* filename, int& errnum)
   for(int k = 0; k < 26; k++)
     config[k] = -1;
 
-  char digit; //character input from .rf file. 
+  char digit; //character input from reflector file. 
   int index(0), count(0);
   
   /*
     - index is the buffer in between swapping values.
     - count counts the number of int inputs.
-    - occurences counts the number of times a number has been read.
   */
+
+  /*================Begin reading in from reflector file.===================*/
 
   inflow.get(digit);
   
@@ -53,11 +50,7 @@ Reflector::Reflector(const char* filename, int& errnum)
 	  return;
 	}
       
-      int number(0);
-      /*
-	- decimal counts what power of 10 the input char is.
-	- number is the int equivalent of input characters.
-      */
+      int number(0);//integers to be read in from reflector file.
       
       number = readNumber(inflow, digit, filename);
 
@@ -69,7 +62,7 @@ Reflector::Reflector(const char* filename, int& errnum)
 	  errnum = 4;
 	  return;
 	}                                //Checks valid input 
-      else if(number < 0 || number > 25) //number in .rf file.
+      else if(number < 0 || number > 25) //number in reflector file.
 	{
 	  cerr << "Invalid index in reflector file " << filename
 	       << ": " << number << " is not a valid index." << endl;
@@ -95,7 +88,7 @@ Reflector::Reflector(const char* filename, int& errnum)
 	}
       else
 	{
-	  if(index == number)
+	  if(index == number)//Checks if atempted to map a letter to itself.
 	    {
 	      cerr << "Invalid mapping of input " << index << " to output "
 		   << number << " (cannot map the same letter to itself)"
@@ -104,7 +97,7 @@ Reflector::Reflector(const char* filename, int& errnum)
 	      return;
 	    }
 	  else if(inverseMapping(config, 26, number) != -1) 
-	    //Check if index has been mapped.
+	    //Check if number has been mapped.
 	    {
 	      cerr << "Invalid mapping of input " << index << " to output "
 		   << number << " (output " << number 
@@ -119,11 +112,13 @@ Reflector::Reflector(const char* filename, int& errnum)
 	  config[number] = index;
 	}
       
+      //Skip any white spaces.
       while(isWhiteSpace(inflow.peek()))
 	{
 	  inflow.get(digit);
 	}
 
+      //Read next non-white-space character into digit.
       inflow.get(digit);
 
       count++;
@@ -142,16 +137,21 @@ Reflector::Reflector(const char* filename, int& errnum)
   
   if(validConfig(config)) //Final check.
     {
-      cerr << "Impossible reflector configuration:" << endl
+      cerr << "Invalid reflector mapping:" << endl
 	   << "Too many/few " << validConfig(config)
 	   << "s in this file." << endl;
-      exit(9);
+      errnum = 9;
+      return;
     }
 
+  //Finished reading from reflector file.
   inflow.close();
 }
 
-
+//Precondition: Reflector object has been successfully constructed. Also,
+//n is an initiallised integer between 0 and 25.
+//Postcondition: Simulates effect of reflecting (n+1)th letter in the alphabet
+//in reflector object.
 void Reflector::passThrough(int& n)
 { 
   n = config[n];

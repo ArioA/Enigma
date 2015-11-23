@@ -12,8 +12,7 @@ to swap values of input/output.*/
 
 using namespace std;
 
-//Constructor:
-
+//Constructor for Plugboard class.
 Plugboard::Plugboard(const char* filename, int& errnum)
 {  
   ifstream inflow;
@@ -33,20 +32,19 @@ Plugboard::Plugboard(const char* filename, int& errnum)
     }
   
   char digit; //character input from .pb file. 
-  int index(0), count(0) /*,inverse_mapping[26]*/;
+  int index(0), count(0);
   
   /*
     - index is the buffer in between swapping values.
     - count counts the number of int inputs.
   */
 
+  /*================Begin reading in from plugboard file.===================*/
   inflow.get(digit);
   
-  //Begin reading in plugboard file.
   while(!inflow.eof())
-    {
-   		//Check if too many numbers have been read in.
-      if(count > 25)
+    {   		
+      if(count > 25) //Check if too many numbers have been read in.
 	{
 	  cerr << "Incorrect (too many) number of parameters"
 	       <<" in plugboard file "
@@ -55,7 +53,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	  return;
 	}
       
-      //number is the integers read in.
+      //number is the integers read in from plugboard file, filename.
       int number;
 
       number = readNumber(inflow, digit, filename);
@@ -93,11 +91,11 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	}
       else
 	{ 
-	  if(index == number) //Checks if number has just been read in.
+	  if(index == number) //Checks if atempting to map a letter to itself.
 	    {
 	      cerr << "Impossible plugboard configuration of input " 
 		   << index << " to output " << number 
-		   << " (cannot map the same letter mapped to itself)"
+		   << " (cannot map the same letter to itself)"
 		   << " in plugboard file: " << filename <<  endl;
 	      errnum = 5;
 	      return;
@@ -119,12 +117,13 @@ Plugboard::Plugboard(const char* filename, int& errnum)
 	  config[number] = index;
 	}
 
-		//Skips any whitespace characters in plugboard file.
+      //Skips any whitespace characters in plugboard file.
       while(isWhiteSpace(inflow.peek()))
 	{
 	  inflow.get(digit);
 	}
 
+      //Reads next non-white-space character into digit.
       inflow.get(digit);
       
       count++;
@@ -148,6 +147,7 @@ Plugboard::Plugboard(const char* filename, int& errnum)
       return;
     }
 
+  //End of reading from plugboard file, filename.
   inflow.close();
 }
 

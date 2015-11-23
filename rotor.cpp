@@ -5,12 +5,14 @@
 
 using namespace std;
 
-Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
+//Constructor for Rotor.
+Rotor::Rotor(const char* filename, const int& _msalgn, int& errnum):
   missalignment(_msalgn)
 {
   ifstream inflow;
   inflow.open(filename);
 
+  //Checks if file could be openned.
   if(!inflow)
     {
       cerr << "Unable to open rotor file: " << filename << ".\n";
@@ -25,15 +27,21 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
       notch[k] = false;
     }
 
+  //digit is the charater which is read in.
+  //notchCount counts the number of notches in the rotor file.
   char digit;
   int notchCount(0);
 
+  /*==================Begin reading in from rotor  file.=====================*/
+
   inflow.get(digit);
 
-  for(int count = 0; count < 26; count++)
+  for(int count = 0; count < 26; count++)//Compulsory 26 letter mappings.
     {
+      //number is integer which is read in.
      int  number(0);
 
+     //Checks if file contains too few rotor mappings.
       if(inflow.eof())
 	{
 	  cerr << "Not all inputs mapped in rotor file: " << filename << endl;
@@ -51,7 +59,7 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
 	  errnum = 4;
 	  return;
 	}                                //Checks valid input number
-      else if(number < 0 || number > 25) // in .rot file.
+      else if(number < 0 || number > 25) // in rotor file.
 	{
 	  cerr << "Invalid index in rotor file " << filename
 	       << ": " << number << " is not a valid index." << endl;
@@ -71,13 +79,16 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
 	  return;
 	}
       
+      //Complete mapping.
       config[count] = number;
 
+      //Skips all white space characters.
       while(isWhiteSpace(inflow.peek()))
 	{
 	  inflow.get(digit);
 	}
 
+      //On to next non-white-space character.
       inflow.get(digit);
     }
 
@@ -95,6 +106,7 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
   while(!inflow.eof())
     {
 
+      //Checks if too many notches are in rotor file.
       if(notchCount > 25)
 	{
 	  cerr << "Invalid rotor mapping in rotor file " << filename
@@ -103,6 +115,7 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
 	  return;
 	}
       
+      //Again, number is integer to be read in.
       int number(0);
       
       number = readNumber(inflow, digit, filename);
@@ -115,7 +128,7 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
 	  errnum = 4;
 	  return;
 	}                                //Checks valid input number
-      else if(number < 0 || number > 25) //number in .rot file.
+      else if(number < 0 || number > 25) //number in rotor file.
 	{
 	  cerr << "Invalid index in rotor file " << filename
 	       << ": " << number << " is not a valid index." << endl;
@@ -132,21 +145,27 @@ Rotor::Rotor(const char* filename, int _msalgn, int& errnum):
 	  return;
 	}
       else
-	notch[number] = true;
+	notch[number] = true; //Complete notch insertion.
 
       notchCount++;
 
+      //Skip all white-space characters.
       while(isWhiteSpace(inflow.peek()))
 	{
 	  inflow.get(digit);
 	}
 
+      //On to next non-white-space character.
       inflow.get(digit);
     }
 
+  //Finished reading.
   inflow.close();
 }
 
+//Preconditioin: n is an initiallised integer between 0 and 25.
+//Postcondition: simulates input passing through rotor from right to left
+//whilst taking into account any rotations via missalignment.
 void Rotor::passThrough_R2L(int& n)
 {
   n = ((config[(n + missalignment) % 26] - missalignment) % 26);
@@ -155,6 +174,10 @@ void Rotor::passThrough_R2L(int& n)
     n += 26; 
 }
 
+//Preconditioin: Rotor object has been constructed and n is an initiallised
+//integer between 0 and 25.
+//Postcondition: simulates input passing through rotor from left to right
+//whilst taking into account any rotations via missalignment.
 void Rotor::passThrough_L2R(int& n)
 {
   for(int k = 0; k < 26; k++)
@@ -168,15 +191,20 @@ void Rotor::passThrough_L2R(int& n)
     }
 }
 
+//Precondition: Rotor object has been constructed.
+//Postcondition: simulates rotation of Rotor object. 
 void Rotor::rotate()
 {
   missalignment = (missalignment + 1) % 26;
 }
 
+//Precondition: Rotor object has been constructed.
+//Postcondition: returns value of notch at 'A' position.
 bool Rotor::get_notch()
 {
   return notch[missalignment];
 }
+
 
 void Rotor::print_config()
 {

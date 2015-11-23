@@ -5,13 +5,15 @@
 
 using namespace std;
 
-//Precondition: a[] is an array of length 'length'. 
+//Precondition: a[] is an array of size length. errnum is the error tracker.
 //Postcondition: a[] is filled with numbers 
-//from the .pos file filename.
-void readPositions(int* a, int length, const char* filename, int& errnum)
+//from the position file filename.
+void readPositions(int* a, const int& length, const char* filename, 
+		   int& errnum)
 {
   ifstream inflow(filename);
 
+  //Check if filestream was successfully opened.
   if(!inflow)
     {
       cerr << "Unable to open position file " << filename << ".\n";
@@ -19,14 +21,18 @@ void readPositions(int* a, int length, const char* filename, int& errnum)
       return;
     }
   
-  char digit;
-  int count(0);
+  char digit; //Character which is read in by inflow.
+  int count(0); //Counts the number of integers which have been read in.
 
+
+  //Begins reading in from position file filename.
   inflow.get(digit);
   
   while(!inflow.eof())
     {
 
+      //Checks if filename contains more integers than there are elements of
+      //a[] to be filled.
       if(count > length-1)
 	{
 	  cerr << "Position file " << filename 
@@ -36,7 +42,7 @@ void readPositions(int* a, int length, const char* filename, int& errnum)
 	  return;
 	}
 
-      int number(0);
+      int number(0); //integer to be read in from the position file.
       
       number = readNumber(inflow, digit, filename);
 
@@ -58,15 +64,17 @@ void readPositions(int* a, int length, const char* filename, int& errnum)
       a[count] = number;
       count++;
 
+      //Skips all white space characters.
       while(isWhiteSpace(inflow.peek()))
 	{
 	  inflow.get(digit);
 	}
       
+      //Reads next non-white-space character into digit.
       inflow.get(digit);
     }
 
-
+  //Checks if a[] has been filled or not.
   if(count < length)
     {
       cerr << "No starting position for rotor " << count
@@ -85,7 +93,7 @@ void readPositions(int* a, int length, const char* filename, int& errnum)
 //Postcondition: *rot_ptr is rotated position times. 
 //So that the position indexed letter is aligned with
 //the 'absolute A'.
-void configurePosition(Rotor* rot_ptr, int position)
+void configurePosition(Rotor* rot_ptr, const int& position)
 {
   for(int k = 0; k < position; k++)
     {

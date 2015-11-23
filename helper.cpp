@@ -10,42 +10,27 @@ typedef Rotor* RotorPtr;
 typedef Plugboard* PlugboardPtr;
 typedef Reflector* ReflectorPtr;
 
-//Precondition: digit is a digit (0, 1, ..., 9).
-//Returns digit as an integer.
-int digit_to_int(char digit)
+int digit_to_int(const char& digit)
 {
   return (static_cast<int>(digit) - 48);
 }
 
-//Precondition: number is between 0 and 9.
-//Returns number as a char.
-char int_to_digit(int number)
+char int_to_digit(const int& number)
 {
   return (static_cast<int>(number + 48));
 }
 
-
-//Precondition: number is between 0 and 25.
-//Returns alphabetic equivalent as capital letter.
-char int_to_letter(int number)
+char int_to_letter(const int& number)
 {
   return (static_cast<char>(number + 65));
 }
 
-//Precondition: alpha is a capital letter.
-//Returns integer representation of alpha.
-int letter_to_int(char alpha)
+int letter_to_int(const char& alpha)
 {
   return (static_cast<int>(alpha) - 65);
 }
 
-//==================================================================
-//=======================Checking Functions=========================
-
-
-//Precondition: digit is any character.
-//Returns true is digit is a digit, false otherwise.
-bool isDigit(char digit)
+bool isDigit(const char& digit)
 {
   if(digit_to_int(digit) < 0 || digit_to_int(digit) > 9)
     {
@@ -55,22 +40,7 @@ bool isDigit(char digit)
     return true;
 }
 
-//Precondition: character is an initialised char variable.
-//Returns true if character is an alphabetic character. False otherwise.
-bool isLetter(char character)
-{
-  if((character >= 'a' && character <= 'z') ||
-     (character >= 'A' && character <= 'Z'))
-     {
-       return true;
-     }
-
-return false;
-}
-
-//Precondition: character is an initialised char variable.
-//Returns true if character is a capital letter. False otherwise.
-bool isCapital(char character)
+bool isCapital(const char& character)
 {
   if(character >= 'A' && character <= 'Z')
      {
@@ -80,11 +50,6 @@ bool isCapital(char character)
 return false;
 }
 
-
-/*Precondition: character is an initialised char.
-Postcondition: Returns true if character is either one of a space, tab, 
-carriage-return or newline according to the ASCII standard.
-*/
 bool isWhiteSpace(char character)
 {
   if(character == 32 || character == 10 || character == 9 ||
@@ -94,11 +59,6 @@ bool isWhiteSpace(char character)
   return false;
 }
 
-
-//Precondition: nums[] is a filled array of integers.
-//Returns true if nums[] is a valid configuration for a plugboard.
-//That is, if each integer in nums is between 0 and 25, and each 
-//integer occurs exactly once.
 int validConfig(int nums[26])
 {
   int occurences[26];
@@ -123,11 +83,6 @@ int validConfig(int nums[26])
   return 0;
 }
 
-/*Precondition: array is an array of size length which has been initiallised,
-output is an initiallised integer.
-Postcondition: if output is not in array, returns -1. Otherwise, returns the
-index of array which output appears in.
-*/
 int inverseMapping(int* array, int length, int output)
 {
   for(int k = 0; k < length; k++)
@@ -139,110 +94,50 @@ int inverseMapping(int* array, int length, int output)
   return -1;
 }
 
-//====================================================================
+//========================Encryption Functions========================
 
-/*Precondition: _inflow is an opened istream and reads from _filename.
-_filename either a .pb, .rot, .rf or .pos file. 
-Postcondition: Returns the number which has been read in. If a non-numeric
-character is contained in _filename, then the NON_NUMERIC_CHARACTER error will
-been invoked and this will be caught by the object constructor.
-*/
-
-int readNumber(istream& _inflow, char& _digit, const char* _filename)
-{
-  int decimal(0), number(0);
-
-  /*
-    - decimal counts what power of 10 the input char is.
-    - number is the int equivalent of input characters.
-  */
-
-  while(_digit != ' ' && _digit != '\n')
-    {
-      
-      if(!isDigit(_digit)) //Non-digit characters are not permited.
-	{
-	  return -1;
-	}
-      
-      //Works out what number is - based on number of loop cycles.
-      
-      number *= pow(10,decimal);
-      number += digit_to_int(_digit);
-      
-      _inflow.get(_digit);
-
-      if(decimal == 0)
-	decimal++;      
-    }
-
-  return number;
-}
-
-
-/*Precondition: rotorList is a list of initialised Rotor pointers, where
-rotorList[0] points to the rightmost rotor. 'rotors' in the number of rotors.
-pb points to an initialised Plugboard. rf points to an initialised
-reflector, and n is a letter index (0 to 25) to be passed through.
-Postcondtition: n has been encrypted, all rotors have rotated as appropriate.
-*/
 void passThroughEnigma(Rotor** rotorList, int rotors,
   Plugboard* pb, Reflector* rf, int& n)
 {
   
-  rotorList[0]->rotate();
+  rotorList[0]->rotate();//First rotor always rotates.
 
+  //Simulates notch rotation mechanism.
   for(int k = 0; k < rotors - 1 && rotorList[k]->get_notch(); k++)
   {
     rotorList[k+1]->rotate();
   }
 
-  //  cout << "PB: " << n << " goes to ";
+  //Begins pass through enigma machine.
+
   pb->passThrough(n);
-  //cout << n << endl;
 
   for(int k = 0; k < rotors; k++)
   {
-    //cout << "Rot " << k << ": " << n;
     rotorList[k]->passThrough_R2L(n);
-    //cout << " goes to " << n << endl;
   }
 
-  //cout << "RF: " << n  << " goes to ";
   rf->passThrough(n);
-  //cout << n << endl;
 
   for(int k = rotors-1; k >= 0; k--)
   {
-    //cout << "Rot " << k << ": " << n;
     rotorList[k]->passThrough_L2R(n);
-    //cout << " goes to " << n << endl;
   }
 
-  //cout << "PB: " << n << " goes to ";
   pb->passThrough(n);
-  //cout << n << endl;
 }
 
-
-/*Precondition: linkedRotors is an array of pointers to 'number_of_rotors'
-rotors. pbPtr and rfPtr point to correctly configured plugboard and reflector
-respectively.
-Postcondition: Prompts user for a message ending in '.' to encrypt via the
-standard input (keyboard). Sends encrypted message to the standard output
-(monitor). INVALID_INPUT_CHARACTER error is picked up by passThroughEnigma().
- */
 void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
 	     ReflectorPtr rfPtr, int& errnum)
 {
-  char input_output;
-  int num_io;
+  char input_output;//to be input from std input and then output to std output.
+  int num_io; //numerical representation of input_output.
   
   cin.get(input_output);
   
   while(!cin.eof())
     { 
-      while(isWhiteSpace(input_output))
+      while(isWhiteSpace(input_output))//Skips white space characters.
 	{
 	  cin.get(input_output);
 	  
@@ -250,7 +145,7 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
 	    return;
 	}
 
-      if(!isCapital(input_output))
+      if(!isCapital(input_output))//Checks if invalid input has been entered.
 	{
 	  cerr << endl << input_output 
 	       << " is not a valid input character (input "
@@ -260,31 +155,28 @@ void encrypt(RotorPtr* linkedRotors, int number_of_rotors, PlugboardPtr pbPtr,
 	  return;
 	}
 
-      num_io = letter_to_int(input_output);
+      num_io = letter_to_int(input_output);//reformat to pass through enigma.
       
+      //initialises encryption.
       passThroughEnigma(linkedRotors, number_of_rotors, pbPtr, rfPtr, num_io);
       
+      //outputs encrypted letter to standard output.
       cout << int_to_letter(num_io);
       
       cin.get(input_output);
     }
 }
 
-/*Precondition: similar to the above, pbPtr and rfPtr point to a plugboard and
-rotor respectively.
-Postcondition: Same as above. This is to be used when there are no rotors
-present. INVALID_INPUT_CHARACTER error is picked up by passThrough().
-*/
 void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
 {
-  char input_output;
-  int num_io;
+  char input_output;//to be input from std input and then output to std output.
+  int num_io; //numerical representation of input_output.
   
   cin.get(input_output);
   
   while(!cin.eof())
     { 
-      while(isWhiteSpace(input_output))
+      while(isWhiteSpace(input_output))//Skips white space characters.
 	{
 	  cin.get(input_output);
 
@@ -292,7 +184,7 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
 	    return;
 	}
 
-      if(!isCapital(input_output))
+      if(!isCapital(input_output))//Checks if invalid input has been entered.
 	{
 	  cerr << endl << input_output 
 	       << " is not a valid input character (input "
@@ -302,40 +194,67 @@ void encrypt(PlugboardPtr pbPtr, ReflectorPtr rfPtr, int& errnum)
 	  return;
 	}
 
-      num_io = letter_to_int(input_output);
+      num_io = letter_to_int(input_output);//reformat to pass through enigma
       
+      //Passes input through enigma.
+
       pbPtr->passThrough(num_io);
       rfPtr->passThrough(num_io);
       pbPtr->passThrough(num_io);
       
+      //outputs encrypted letter to standard output.
       cout << int_to_letter(num_io);
       
       cin.get(input_output);
     }
 }
 
+
+//===========================Misc Functions================================
+
+int readNumber(istream& _inflow, char& _digit, const char* _filename)
+{
+  int number(0); //integer value of value to be read in.
+
+  while(_digit != ' ' && _digit != '\n')
+    {
+      
+      if(!isDigit(_digit)) //Non-digit characters are not permited.
+	{
+	  return -1; //error flag.
+	}
+      
+      number *= 10; //'shifts' number up one decimal place.
+      number += digit_to_int(_digit); //digit is placed into number at
+                                      //appropriate decimal position.
+      _inflow.get(_digit);     
+    }
+
+  return number;
+}
+
 void deleteRotors(RotorPtr* rotorsList, int number_of_rotors, int* positions)
 {
-  for(int k = 0; k < number_of_rotors; k++)
+  for(int k = 0; k < number_of_rotors; k++) //delete each dynamic pointer.
     {
       delete rotorsList[k];
       rotorsList[k] = NULL;
     }
   
-  delete [] rotorsList;
+  delete [] rotorsList; //delete dynamic array.
   rotorsList = NULL;
-  delete [] positions;
+  delete [] positions; //delete dynamic array.
   positions = NULL;
 }
 
 void deleteRotors(RotorPtr* rotorsList, int number_of_rotors)
 {
-  for(int k = 0; k < number_of_rotors; k++)
+  for(int k = 0; k < number_of_rotors; k++) //delete each dynamic pointer.
     {
       delete rotorsList[k];
       rotorsList[k] = NULL;
     }
   
-  delete [] rotorsList;
+  delete [] rotorsList; //delete dynamic array.
   rotorsList = NULL;
 }
