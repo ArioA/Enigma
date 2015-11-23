@@ -176,5 +176,5 @@ int main(int argc, char** argv)
       deleteRotors(linkedRotors, number_of_rotors, positions);
     }
  
-  return 0;
+  return NO_ERROR;
 }
